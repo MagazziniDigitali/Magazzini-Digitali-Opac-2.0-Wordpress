@@ -105,6 +105,7 @@
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:apply-templates select="str[@name='_root_']"/>
+                    <xsl:apply-templates select="arr[@name='journalTitolo_show']"/>
                     <xsl:apply-templates select="arr[@name='titolo_show']"/>
                     <xsl:apply-templates select="arr[@name='lingua_show']"/>
                     <xsl:apply-templates select="arr[@name='autore_show']"/>
@@ -148,27 +149,303 @@
                     <xsl:apply-templates select="arr[@name='piecedt_show']"/>
                     <xsl:apply-templates select="arr[@name='piecein_show']"/>
                     <xsl:apply-templates select="arr[@name='indexed_show']"/>
+                    <xsl:apply-templates select="arr[@name='pageStart_show']"/>
+                    <xsl:apply-templates select="arr[@name='pageEnd_show']"/>
+                    <xsl:apply-templates select="arr[@name='agentIdentifier_show']"/>
+                    <xsl:apply-templates select="arr[@name='agentName_show']"/>
+                    <xsl:apply-templates select="arr[@name='agentType_show']"/>
+                    <xsl:apply-templates select="arr[@name='agentNote_show']"/>
+                    <xsl:apply-templates select="arr[@name='agentIdIstituzione_show']"/>
+                    <xsl:apply-templates select="arr[@name='agentIdRigths_show']"/>
+                    <xsl:apply-templates select="arr[@name='rightsIdentifier_show']"/>
+                    <xsl:apply-templates select="arr[@name='rightsBasis_show']"/>
+                    <xsl:apply-templates select="arr[@name='rightsInformationBasis_show']"/>
+                    <xsl:apply-templates select="arr[@name='rightsAct_show']"/>
+                    <xsl:apply-templates select="arr[@name='rightsRestriction_show']"/>
+                    <xsl:apply-templates select="arr[@name='rightsObjectIdentifier_show']"/>
+                    <xsl:apply-templates select="arr[@name='rightsStatuteJurisdiction_show']"/>
+                    <xsl:apply-templates select="arr[@name='rightsStatuteCitation_show']"/>
+                    <xsl:apply-templates select="arr[@name='nbn_show']"/>
+                    <xsl:apply-templates select="arr[@name='url_show']"/>
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:apply-templates select="arr[@name='originalFileName_show']"/>
         </table>
     </xsl:template>
-
-    <xsl:template match="arr[@name='originalFileName_show']">
+    
+    <xsl:template match="arr[@name='nbn_show']">
         <tr>
-            <td colspan="2">
-                <a title="Visualizza Oggetti digitali" id="viewImg">
-                    <xsl:attribute name="onclick">showImg('<xsl:copy-of select="str[@name='id']/child::text()" />');</xsl:attribute>
-                    <img alt="Visualizza Oggetti Digitali" class="objDigit" src="/wp-content/plugins/md-opac/images/xlimage/images/object.gif"/>
-                    <b>Visualizza Oggetti Digitali</b>
-                </a>
-                <a title="Visualizza Oggetti digitali" id="viewImgBlank"  target="_blank">
-                    <xsl:attribute name="onclick">showImgPopup('<xsl:copy-of select="str[@name='id']/child::text()" />');</xsl:attribute>
-                    <img alt="Visualizza Oggetti Digitali Finestra Separata" class="objDigitBlank" src="/wp-content/plugins/md-opac/images/xlimage/images/object_blank.gif"/>
-                    <b>Visualizza Oggetti Digitali Finestra Separata</b>
-                </a>
+            <td id="testoB">
+                Codice NBN
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
             </td>
         </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='url_show']">
+        <tr>
+            <td id="testoB">
+                Codice URL
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='rightsIdentifier_show']">
+        <tr>
+            <td id="testoB">
+                Codice Identificativo del Rights 
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='rightsBasis_show']">
+        <tr>
+            <td id="testoB">
+                Rights Basis
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='rightsInformationBasis_show']">
+        <tr>
+            <td id="testoB">
+                Rights Information Basis
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='rightsAct_show']">
+        <tr>
+            <td id="testoB">
+                Rights Act
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='rightsRestriction_show']">
+        <tr>
+            <td id="testoB">
+                Rights Restriction
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='rightsObjectIdentifier_show']">
+        <tr>
+            <td id="testoB">
+                Rights Object Identifier
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='rightsStatuteJurisdiction_show']">
+        <tr>
+            <td id="testoB">
+                Rights Statute Jurisdiction
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='rightsStatuteCitation_show']">
+        <tr>
+            <td id="testoB">
+                Rights Statute Citation
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='agentIdentifier_show']">
+        <tr>
+            <td id="testoB">
+                Codice di identificazione Agente
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='agentName_show']">
+        <tr>
+            <td id="testoB">
+                Agent Nome
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='agentType_show']">
+        <tr>
+            <td id="testoB">
+                Agent Type
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='agentNote_show']">
+        <tr>
+            <td id="testoB">
+                Agent Note
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='agentIdIstituzione_show']">
+        <tr>
+            <td id="testoB">
+                Istituto
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='agentIdRigths_show']">
+        <tr>
+            <td id="testoB">
+                Rights
+            </td>
+            <td id="valueB">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()" />
+                    </b>
+                    <br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='originalFileName_show']">
+        <xsl:if test="../urlObj">
+            <tr>
+                <td colspan="2">
+                    <a title="Visualizza Oggetti digitali" id="viewImg">
+                        <xsl:attribute name="href"><xsl:copy-of select="../urlObj/child::text()" /></xsl:attribute>
+                        <img alt="Visualizza Oggetti Digitali" class="objDigit" src="/wp-content/plugins/md-opac/images/xlimage/images/object.gif"/>
+                        <b>Visualizza Oggetti Digitali</b>
+                    </a>
+                    <a title="Visualizza Oggetti digitali" id="viewImgBlank"  target="_blank">
+                        <xsl:attribute name="href"><xsl:copy-of select="../urlObj/child::text()" /></xsl:attribute>
+                        <img alt="Visualizza Oggetti Digitali Finestra Separata" class="objDigitBlank" src="/wp-content/plugins/md-opac/images/xlimage/images/object_blank.gif"/>
+                        <b>Visualizza Oggetti Digitali Finestra Separata</b>
+                    </a>
+                </td>
+            </tr>
+        </xsl:if>
     </xsl:template>
     
     <xsl:template match="arr[@name='bid_show']">
@@ -188,11 +465,21 @@
                     </xsl:if>
                     <xsl:if test="../../arr[@name='tipologiaFile_show'][1]/str/child::text()!='Uc' and ../../arr[@name='tipologiaFile_show'][1]/str/child::text()!='Ud'">
                         <b>
-                            <xsl:copy-of select="child::text()"/>
+                            <xsl:copy-of select="child::text()" />
+                        </b>
+                    </xsl:if>
+                    <xsl:if test="not(../../arr[@name='tipologiaFile_show'])">
+                        <b>
+                            <xsl:copy-of select="child::text()" />
                         </b>
                     </xsl:if>
                     <br/>
                 </xsl:for-each>
+                <xsl:if test="../arr[@name='bidUrl_show']">
+                    <b>
+                        <xsl:copy-of select="../arr[@name='bidUrl_show']" />
+                    </b>
+                </xsl:if>
             </td>
         </tr>
     </xsl:template>
@@ -246,6 +533,22 @@
                         </a>
                     </xsl:otherwise>
                 </xsl:choose>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='journalTitolo_show']">
+        <tr>
+            <td id="testo">
+                Journal titolo
+            </td>
+            <td id="value">
+                <xsl:for-each select="str">
+                    <b>
+                        <xsl:copy-of select="child::text()"/>
+                    </b>
+                    <br/>
+                </xsl:for-each>
             </td>
         </tr>
     </xsl:template>
@@ -339,6 +642,42 @@
                     </b>
                 <!-- /a --><br/>
             </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='pageStart_show']">
+        <tr>
+            <td id="testo">
+                Pagina Partenza
+            </td>
+            <td id="value">
+                <xsl:for-each select="str">
+                    <!-- a>
+                    <xsl:attribute name="onclick">findTeca('bid','<xsl:copy-of select="translate(child::text(),$apos,'')" />');</xsl:attribute -->
+                    <b>
+                        <xsl:copy-of select="child::text()"/>
+                    </b>
+                    <!-- /a --><br/>
+                </xsl:for-each>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='pageEnd_show']">
+        <tr>
+            <td id="testo">
+                Pagina Arrivo
+            </td>
+            <td id="value">
+                <xsl:for-each select="str">
+                    <!-- a>
+                    <xsl:attribute name="onclick">findTeca('bid','<xsl:copy-of select="translate(child::text(),$apos,'')" />');</xsl:attribute -->
+                    <b>
+                        <xsl:copy-of select="child::text()"/>
+                    </b>
+                    <!-- /a --><br/>
+                </xsl:for-each>
             </td>
         </tr>
     </xsl:template>

@@ -261,6 +261,42 @@ function md_scheda() {
 					"parent" => "header-styles",
 					"size" => "100",
 					"std" => "wp-content/plugins/md-opac/xsd/show/solrToScheda.xsl"
+			), 
+			array (
+					"name" => "Campi Scheda Figli",
+					"desc" => "Campi da visualizzare nella scheda figli",
+					"id" => "tecaSolrSchedaFigliField",
+					"type" => "multi-select",
+					"options" => $adminConfig->tecaSolrSchedaField(),
+					"parent" => "header-styles",
+					"std" => "none"
+			),
+			array (
+					"name" => "Tracciato Xls Figli",
+					"desc" => "File Xls utilizzato per la generazione della scheda Figli",
+					"id" => "tecaSolrSchedaFigliXsl",
+					"type" => "text",
+					"parent" => "header-styles",
+					"size" => "100",
+					"std" => "wp-content/plugins/md-opac/xsd/show/solrToSchedaFigli.xsl"
+			),
+			array (
+					"name" => "Tipologie files View",
+					"desc" => "Tipologie files accettate per la visualizzazione degli oggetto",
+					"id" => "tecaSolrSchedaMimeTypeShow",
+					"type" => "multi-select",
+					"options" =>  $adminConfig->tecaSolrMimeTypeShow(),
+					"parent" => "header-styles",
+					"std" => ""
+			),
+			array (
+					"name" => "URL Show Object",
+					"desc" => "Indirizzo URL per la visualizzazione degli oggetti",
+					"id" => "tecaSolrSchedaURLShowObject",
+					"type" => "text",
+					"parent" => "header-styles",
+					"size" => "100",
+					"std" => "/index.php/opac/login-oggetti-digitali/"
 			)
 	);
 	?>

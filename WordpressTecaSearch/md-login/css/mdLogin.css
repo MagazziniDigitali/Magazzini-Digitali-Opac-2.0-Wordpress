@@ -1,0 +1,42 @@
+@CHARSET "UTF-8";
+fieldset.tecaLoginForm {
+    background-color: #efefef;
+    border: 0 none;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin: 15px 0 0;
+    min-width: 0;
+    padding: 0 0 20px;
+}
+
+fieldset.tecaLoginForm legend {
+    background-color: #607ab2;
+    border-top: 2px solid #aec0e4;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color: #ffffff;
+    display: block;
+    font-size: 13px;
+    line-height: inherit;
+    margin-bottom: 5px;
+    padding: 12px;
+    text-transform: uppercase;
+    width: 100%;
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-image: none;
+}
+
+div.tecaLoginForm h1 {
+	color: red;
+	text-align: center;
+}
+
+div.md_login_error_display {
+	color: red;
+    font-size: 25px;
+    padding-top: 10px;
+    text-align: center;
+}

@@ -19,5 +19,8 @@ function md_View_Show(){
 
 	echo $mdSolr->searchShowSolr( $id,$bid );
 	
+	if (isset($id)){
+		echo $mdSolr->searchShowFigliSolr($id);
+	}
 }
 ?>

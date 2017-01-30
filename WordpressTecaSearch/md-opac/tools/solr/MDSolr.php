@@ -425,9 +425,130 @@ class MDSolr extends MDSolrFacet {
 						get_option('tecaSolrSchedaXsl','components/com_tecaricerca/views/show/xsd/solrToScheda.xsl') );
 			} else {
 				#echo ("NON SCHEDAF");
+				if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'file' or 
+						$resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'documento'){
+					
+					$tipoOggetto = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0];
+					$mimeTypes = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('mimeType_show');
+					$mimeType = "";
+					if (isset($mimeTypes)){
+						$mimeType = $mimeTypes[0];
+					}
+					$id = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('id');
+					$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('_root_');
+						
+					$url = $this->checkShowObject($tipoOggetto, $mimeType, $id, $client, $root);
+
+					if ($url != ""){
+						$response = str_replace('<doc>','<doc><urlObj>'.$url.'</urlObj>',$response);
+					}
+				}
 				return convertToHtml ( $response,
 						get_option('tecaSolrSchedaXsl','components/com_tecaricerca/views/show/xsd/solrToScheda.xsl') );
 			}
+		}
+	}
+
+	function checkShowObject($tipoOggetto, $mimeType, $id, $client, $root){
+		$url="";
+		if ($tipoOggetto == 'file'){
+			$mimeTypeShow = get_option('tecaSolrSchedaMimeTypeShow','default_value');
+		
+			$fields = explode ( ",", $mimeTypeShow);
+			foreach ( $fields as &$field ) {
+				if ($url=="" and $mimeType == $field) {
+					$url=get_option('tecaSolrSchedaURLShowObject','default_value').'?id='.$id;
+				}
+			}
+		} elseif ($tipoOggetto == 'documento'){
+			$query = new SolrQuery ();
+			$solrQuery='id:'.$root;
+			
+			$query->setQuery ( $solrQuery);
+			$query->setStart ( 0 );
+			$query->setRows ( get_option('tecaSolrSearchPage','10') );
+			
+			$query->addField ("tipoOggetto_show");
+			$query->addField ("mimeType_show");
+			$query->addField ("id");
+			$query->addField ("_root_");
+
+			$query->addParam ( 'wt', 'xml' );
+			
+			$query_response = $client->query ( $query );
+			
+			$resp = $query_response->getResponse ();
+			if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]==''){
+				$url="";
+			} else {
+				if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'file' or
+						$resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'documento'){
+
+					$tipoOggetto = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0];
+					$mimeTypes = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('mimeType_show');
+					$mimeType = "";
+					if (isset($mimeTypes)){
+						$mimeType = $mimeTypes[0];
+					}
+					$id = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('id');
+					$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('_root_');
+					if (!isset($root)){
+						$root = "";
+					}
+		
+					$url = $this->checkShowObject($tipoOggetto, $mimeType, $id, $client, $root);
+				}
+			}
+		}
+		return $url;
+	}
+
+	/**
+	 * 
+	 * @param unknown $id
+	 * @return string
+	 */
+	function searchShowFigliSolr($id) {
+		$options = array (
+				'hostname' => get_option('tecaSolrServer','default_value'),
+				'port' => get_option('tecaSolrPort','default_value')
+		);
+	
+		$client = new SolrClient ( $options );
+		$client->setServlet ( SolrClient::SEARCH_SERVLET_TYPE, get_option('tecaSolrSearchServlet','default_value') );
+	
+		$query = new SolrQuery ();
+		if ($id !== ''){
+			$solrQuery='_root_:'.$id;
+		}
+	
+		$query->setQuery ( $solrQuery);
+		$query->setStart ( 0 );
+		$query->setRows ( 900 );
+	
+		$tecaSolrSearchField = get_option('tecaSolrSchedaFigliField','default_value');
+	
+		$fields = explode ( ",", $tecaSolrSearchField );
+		foreach ( $fields as &$field ) {
+			$query->addField ($field);
+		}
+	
+		$query->addSortField ( "titolo_sort", SolrQuery::ORDER_ASC );
+		$query->addSortField ( "originalFileName_sort", SolrQuery::ORDER_ASC );
+		$query->addSortField ( "eventType_sort", SolrQuery::ORDER_ASC );
+		
+		$query->addParam ( 'wt', 'xml' );
+	
+		#echo("SolrQ: ".$query->toString()."<br/>");
+		$query_response = $client->query ( $query );
+	
+		$response = $query_response->getRawResponse ();
+		$resp = $query_response->getResponse ();
+		if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]==''){
+			return "";
+		} else {
+			return convertToHtml ( $response,
+					get_option('tecaSolrSchedaFigliXsl','components/com_tecaricerca/views/show/xsd/solrToSchedaFigli.xsl') );
 		}
 	}
 	

@@ -6,7 +6,13 @@ class adminConfig {
 	 */
 	function __construct() {
 	}
-	
+
+	function tecaSolrMimeTypeShow(){
+		$createForm = new CreateForm ();
+		$mimeType = array("application/pdf" => "PDF");
+		return $createForm->genArrayMultiSelect ($mimeType);
+	}
+
 	/**
 	 * Indica la lista dei campi visualizzati nella ricostruzione breve
 	 *
@@ -72,7 +78,10 @@ class adminConfig {
 				"collocazione_show" => "Collocazione",
 				"eventType_show" => "Event Type",
 				"eventDate_show" => "Event Date",
-				"eventOutCome_show" => "Event Out Come" 
+				"eventOutCome_show" => "Event Out Come", 
+				"agentName_show" => "Agent Name",
+				"agentType_show" => "Agent Type",
+				"rightsBasis_show" => "Rigths Basis"
 		);
 	}
 	
@@ -306,10 +315,15 @@ class adminConfig {
 				"id" => "Identificativo",
 				"tipoOggetto_show" => "Tipologia File",
 				"bid_show" => "Bid",
+				"bidUrl_show" => "Bid Url",
+				"journalBid_show" => "Journal Bid",
+				"journalBidUrl_show" => "Journal Bid Url",
 				"collocazione_show" => "Collocazione",
 				"_root_" => "Collegamento Scheda Padre",
 				"titolo_show" => "Titolo",
+				"journalTitolo_show" => "Journal Titolo",
 				"lingua_show" => "Lingua",
+				"autoreId_show" => "ID Autore",
 				"autore_show" => "Autore",
 				"originalFileName_show" => "Nome del file Originale",
 				"descrizione_show" => "Descrizione",
@@ -351,7 +365,25 @@ class adminConfig {
 				"piecegr_show" => "Piece gr",
 				"piecedt_show" => "Piece dt",
 				"piecein_show" => "Piece in",
-				"indexed_show" => "Data ora indicizzazione"
+				"indexed_show" => "Data ora indicizzazione",
+				"pageStart_show" => "Pagina di partenza",
+				"pageEnd_show" => "Pagina di arrivo",
+				"url_show" => "Url",
+				"agentIdentifier_show" => "Agent Identifier",
+				"agentName_show" => "Agent Name",
+				"agentType_show" => "Agent Type",
+				"agentNote_show" => "Agent Note",
+				"agentIdIstituzione_show" => "Agent Id Istitutzione",
+				"agentIdRigths_show" => "Agent Id Rights",
+				"rightsIdentifier_show" => "Rigths Identifier",
+				"rightsBasis_show" => "Rigths Basis",
+				"rightsInformationBasis_show" => "Rigths Information Basis",
+				"rightsAct_show" => "Rigths Act",
+				"rightsRestriction_show" => "Rigths Restriction",
+				"rightsObjectIdentifier_show" => "Rigths Object Itentifier",
+				"rightsStatuteJurisdiction_show" => "Rigths Statute Jurisdiction",
+				"rightsStatuteCitation_show" => "Rigths Statute Citation",
+				"nbn_show" => "NBN",
 		);
 	}
 }
