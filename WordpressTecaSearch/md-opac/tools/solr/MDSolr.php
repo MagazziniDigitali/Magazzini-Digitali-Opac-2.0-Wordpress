@@ -8,10 +8,10 @@ include_once( MD_PLUGIN_PATH . 'tools/solr/MDSolrFacet.php' );
  * Classe utilizzata pe la gestione dei metodo per la gestione dell'accesso alla base dati Solr
  *
  * @author massi
- *        
+ *
  */
 class MDSolr extends MDSolrFacet {
-	
+
 	private $keyword = '';
 	private $result = '';
 	private $qStart = '';
@@ -27,7 +27,7 @@ class MDSolr extends MDSolrFacet {
 	private $numFound;
 	private $fine;
 	private $QTime;
-	
+
 	/**
 	 * Costruttore
 	 */
@@ -38,14 +38,14 @@ class MDSolr extends MDSolrFacet {
 		$this->initFacet ();
 		$this->initKeySolr ();
 	}
-	
+
 	/**
 	 * Metodo utilizzato per inizializzare la variabile Keyword e Result
 	 */
 	private function initKeyword() {
 		$this->keyword = '';
 		$this->result = '';
-		
+
 		if (isset ( $_REQUEST ['keyword'] )) {
 			$this->keyword = $_REQUEST ['keyword'];
 		}
@@ -53,7 +53,7 @@ class MDSolr extends MDSolrFacet {
 			$this->keyword = '';
 		}
 	}
-	
+
 	/**
 	 * Metodo utilizzato per l'inizializzazione delle infomrazioni per la navigazione
 	 */
@@ -69,13 +69,13 @@ class MDSolr extends MDSolrFacet {
 			$this->recPag = $_REQUEST ['recPag'];
 		}
 	}
-	
-//	facetQuery=%2BtipoOggetto_fc%3A%22contenitore%22
+
+	//	facetQuery=%2BtipoOggetto_fc%3A%22contenitore%22
 	/**
-	 * Metodo utilizzato per la lettura dell'eventuali filtri per le facette
-	 */
+	* Metodo utilizzato per la lettura dell'eventuali filtri per le facette
+	*/
 	private function initFacet() {
-		
+
 		if (isset ( $_REQUEST ['facetQuery'] ) && $_REQUEST ['facetQuery'] !== '') {
 			if (isset ( $_REQUEST ['facetQuery'] )) {
 				$this->facetQuery = $_REQUEST ['facetQuery'];
@@ -93,7 +93,7 @@ class MDSolr extends MDSolrFacet {
 				$this->facetQuery .= '+tipologiaFile_fc:"' . $_REQUEST ( 'tipologiaFile_fc' ) . '"';
 				$this->facetQueryTitolo .= $_REQUEST ( 'tipologiaFile_fc' );
 			}
-			
+
 			if (isset ( $_REQUEST ['soggettoConservatoreKey_fc'] ) && $_REQUEST ['soggettoConservatoreKey_fc'] !== '') {
 				if ($this->facetQuery !== '') {
 					$this->facetQuery .= ' ';
@@ -102,7 +102,7 @@ class MDSolr extends MDSolrFacet {
 				$this->facetQuery .= '+soggettoConservatoreKey_fc:"' . $_REQUEST ['soggettoConservatoreKey_fc'] . '"';
 				$this->facetQueryTitolo .= $_REQUEST ['soggettoConservatoreKey_fc'];
 			}
-			
+
 			if (isset ( $_REQUEST ['soggettoConservatore_fc'] ) && $_REQUEST ['soggettoConservatore_fc'] !== '') {
 				if ($this->facetQuery !== '') {
 					$this->facetQuery .= ' ';
@@ -115,7 +115,7 @@ class MDSolr extends MDSolrFacet {
 					$this->facetQueryTitolo .= $_REQUEST ['soggettoConservatore_fc'];
 				}
 			}
-			
+
 			if (isset ( $_REQUEST ['fondoKey_fc'] ) && $_REQUEST ['fondoKey_fc'] !== '') {
 				if ($this->facetQuery !== '') {
 					$this->facetQuery .= ' ';
@@ -124,7 +124,7 @@ class MDSolr extends MDSolrFacet {
 				$this->facetQuery .= '+fondoKey_fc:"' . $_REQUEST ['fondoKey_fc'] . '"';
 				$this->facetQueryTitolo .= $_REQUEST ['fondoKey_fc'];
 			}
-			
+
 			if (isset ( $_REQUEST ['fondo_fc'] ) && $_REQUEST ['fondo_fc'] !== '') {
 				if ($this->facetQuery !== '') {
 					$this->facetQuery .= ' ';
@@ -133,7 +133,7 @@ class MDSolr extends MDSolrFacet {
 				$this->facetQuery .= '+fondo_fc:"' . $_REQUEST ['fondo_fc'] . '"';
 				$this->facetQueryTitolo .= $_REQUEST ['fondo_fc'];
 			}
-			
+
 			if (isset ( $_REQUEST ['subFondoKey_fc'] ) && $_REQUEST ['subFondoKey_fc'] !== '') {
 				if ($this->facetQuery !== '') {
 					$this->facetQuery .= ' ';
@@ -142,7 +142,7 @@ class MDSolr extends MDSolrFacet {
 				$this->facetQuery .= '+subFondoKey_fc:"' . $_REQUEST ['subFondoKey_fc'] . '"';
 				$this->facetQueryTitolo .= $_REQUEST ['subFondoKey_fc'];
 			}
-			
+
 			if (isset ( $_REQUEST ['subFondo_fc'] ) && $_REQUEST ['subFondo_fc'] !== '') {
 				if ($this->facetQuery !== '') {
 					$this->facetQuery .= ' ';
@@ -151,7 +151,7 @@ class MDSolr extends MDSolrFacet {
 				$this->facetQuery .= '+subFondo_fc:"' . $_REQUEST ['subFondo_fc'] . '"';
 				$this->facetQueryTitolo .= $_REQUEST ['subFondo_fc'];
 			}
-			
+
 			if (isset ( $_REQUEST ['subFondo2Key_fc'] ) && $_REQUEST ['subFondo2Key_fc'] !== '') {
 				if ($this->facetQuery !== '') {
 					$this->facetQuery .= ' ';
@@ -162,7 +162,7 @@ class MDSolr extends MDSolrFacet {
 			}
 		}
 	}
-	
+
 	/**
 	 * Metodo utilizzato per la lettura dei filtri per KeySolr
 	 */
@@ -173,11 +173,11 @@ class MDSolr extends MDSolrFacet {
 			if (isset ( $_REQUEST ['keySolr'] ) && $_REQUEST ['keySolr'] !== '') {
 				$this->keySolr = $_REQUEST ['keySolr'];
 			}
-			
+
 			if (isset ( $_REQUEST ['valueSolr'] ) && $_REQUEST ['valueSolr'] !== '') {
 				$this->valueSolr = str_replace ( ']', '', str_replace ( '[', '', str_replace ( '"', '', $_REQUEST ['valueSolr'] ) ) );
 			}
-			
+
 			if ($this->keySolr == 'tipologiaFile') {
 				$this->facetQuery .= '+tipologiaFile:"' . str_replace ( ' ', '_', $this->valueSolr ) . '"';
 				$this->facetQueryTitolo .= $this->valueSolr;
@@ -209,7 +209,7 @@ class MDSolr extends MDSolrFacet {
 				$this->valueSolr = '';
 			}
 		}
-		
+
 		$titolo = "";
 		if ($this->keyword !== '') {
 			$titolo .= " " . $this->keyword;
@@ -224,23 +224,23 @@ class MDSolr extends MDSolrFacet {
 
 		checkMolliche ( $titolo);
 	}
-	
+
 	/**
 	 * Metodo utilizzato per eseguire le ricerche per la breve
-	 * 
-	 * @param unknown $keyword        	
+	 *
+	 * @param unknown $keyword
 	 * @return string
 	 */
 	function searchSolr($keyword) {
 		$options = array (
 				'hostname' => get_option ( 'tecaSolrServer', 'default_value' ),
-				'port' => get_option ( 'tecaSolrPort', 'default_value' ) 
+				'port' => get_option ( 'tecaSolrPort', 'default_value' )
 		);
 		$client = new SolrClient ( $options );
 		$client->setServlet ( SolrClient::SEARCH_SERVLET_TYPE, get_option ( 'tecaSolrSearchServlet', 'default_value' ) );
-		
+
 		$query = new SolrQuery ();
-		
+
 		if (get_option ( 'tecaSolrSearchSort', '' ) != '') {
 			$sorts = explode ( ",", get_option ( 'tecaSolrSearchSort', '' ) );
 			foreach ( $sorts as &$sort ) {
@@ -251,11 +251,11 @@ class MDSolr extends MDSolrFacet {
 				} else {
 					$ord = SolrQuery::ORDER_DESC;
 				}
-				
+
 				$query->addSortField ( $key, $ord );
 			}
 		}
-		
+
 		$solrQuery = '';
 		if ($keyword == '') {
 			if ($this->keySolr == '' && $this->valueSolr == '') {
@@ -276,14 +276,14 @@ class MDSolr extends MDSolrFacet {
 				$solrQuery .= ' +keywords:' . $valuePieces;
 			}
 		}
-		
+
 		if ($this->facetQuery != '') {
 			if ($solrQuery == '*:*') {
 				$solrQuery = '';
 			}
 			$solrQuery .= ' ' . str_replace ( '_fc:', ':', $this->facetQuery);
 		}
-		
+
 		$tecaSolrSearchExclude = get_option ( 'tecaSolrSearchExclude' );
 		if (isset($tecaSolrSearchExclude) && $tecaSolrSearchExclude != ''){
 			$excludes = explode ( "\r", $tecaSolrSearchExclude );
@@ -294,7 +294,7 @@ class MDSolr extends MDSolrFacet {
 		$query->setQuery ( $solrQuery );
 		$query->setStart ( $this->qStart );
 		$query->setRows ( $this->recPag );
-		
+
 		$tecaSolrSearchField = get_option ( 'tecaSolrSearchField');
 		if (isset($tecaSolrSearchField) && $tecaSolrSearchField != ''){
 			$fields = explode ( ",", $tecaSolrSearchField );
@@ -307,7 +307,7 @@ class MDSolr extends MDSolrFacet {
 			$query->setFacetMinCount ( get_option ( 'tecaSolrSearchFacetMinCount', '1' ) );
 			$query->setFacetLimit ( get_option ( 'tecaSolrSearchFacetLimit', '10' ) );
 			$query->setFacetSort ( get_option ( 'tecaSolrSearchFacetSort', '1' ) );
-			
+
 			$tecaSolrSearchFacetField = get_option ( 'tecaSolrSearchFacetField' );
 			if (isset($tecaSolrSearchFacetField) && $tecaSolrSearchFacetField != '') {
 				$fields = explode ( ",", $tecaSolrSearchFacetField );
@@ -345,20 +345,20 @@ class MDSolr extends MDSolrFacet {
 			}
 		}
 		$query->addParam ( 'wt', 'xml' );
-		
+
 		$query_response = $client->query ( $query );
-		
+
 		$response = $query_response->getRawResponse ();
 
 		$this->calcStatoPage($query_response->getResponse ());
 
 		$this->disFacetMenu ( $query_response->getResponse (), $this->facetQuery, MD_PLUGIN_URL );
-		
+
 		return convertToHtml ( $response, get_option ( 'tecaSolrSearchXsl', 'components/com_tecaricerca/views/search/xsd/solrToSearchResult.xsl' ) );
 	}
 
 	/**
-	 * 
+	 *
 	 * @param unknown $id
 	 * @param unknown $bid
 	 * @return string
@@ -368,33 +368,33 @@ class MDSolr extends MDSolrFacet {
 				'hostname' => get_option('tecaSolrServer','default_value'),
 				'port' => get_option('tecaSolrPort','default_value')
 		);
-	
+
 		$client = new SolrClient ( $options );
 		$client->setServlet ( SolrClient::SEARCH_SERVLET_TYPE, get_option('tecaSolrSearchServlet','default_value') );
-	
+
 		$query = new SolrQuery ();
 		if ($id !== ''){
 			$solrQuery='id:'.$id;
 		} else {
 			$solrQuery='bid:'.$bid;
 		}
-	
+
 		$query->setQuery ( $solrQuery);
 		$query->setStart ( 0 );
 		$query->setRows ( get_option('tecaSolrSearchPage','10') );
-	
+
 		$tecaSolrSearchField = get_option('tecaSolrSchedaField','default_value');
-		
+
 		$fields = explode ( ",", $tecaSolrSearchField );
 		foreach ( $fields as &$field ) {
 			$query->addField ($field);
 		}
-	
+
 		$query->addParam ( 'wt', 'xml' );
-	
+
 		#echo("SolrQ: ".$query->toString()."<br/>");
 		$query_response = $client->query ( $query );
-	
+
 		$response = $query_response->getRawResponse ();
 		$resp = $query_response->getResponse ();
 		if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]==''){
@@ -425,23 +425,29 @@ class MDSolr extends MDSolrFacet {
 						get_option('tecaSolrSchedaXsl','components/com_tecaricerca/views/show/xsd/solrToScheda.xsl') );
 			} else {
 				#echo ("NON SCHEDAF");
-				if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'file' or 
+				if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'file' or
 						$resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'documento'){
-					
-					$tipoOggetto = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0];
-					$mimeTypes = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('mimeType_show');
-					$mimeType = "";
-					if (isset($mimeTypes)){
-						$mimeType = $mimeTypes[0];
-					}
-					$id = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('id');
-					$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('_root_');
-						
-					$url = $this->checkShowObject($tipoOggetto, $mimeType, $id, $client, $root);
 
-					if ($url != ""){
-						$response = str_replace('<doc>','<doc><urlObj>'.$url.'</urlObj>',$response);
-					}
+							$tipoOggetto = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0];
+							$mimeTypes = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('mimeType_show');
+							$mimeType = "";
+							if (isset($mimeTypes)){
+								$mimeType = $mimeTypes[0];
+							}
+							$id = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('id');
+							$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('_root_');
+							if (!isset($root)){
+								$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('padre');
+								if (!isset($root)){
+					    $root="";
+								}
+							}
+
+							$url = $this->checkShowObject($tipoOggetto, $mimeType, $id, $client, $root);
+
+							if ($url != ""){
+								$response = str_replace('<doc>','<doc><urlObj>'.$url.'</urlObj>',$response);
+							}
 				}
 				return convertToHtml ( $response,
 						get_option('tecaSolrSchedaXsl','components/com_tecaricerca/views/show/xsd/solrToScheda.xsl') );
@@ -453,30 +459,31 @@ class MDSolr extends MDSolrFacet {
 		$url="";
 		if ($tipoOggetto == 'file'){
 			$mimeTypeShow = get_option('tecaSolrSchedaMimeTypeShow','default_value');
-		
+
 			$fields = explode ( ",", $mimeTypeShow);
 			foreach ( $fields as &$field ) {
 				if ($url=="" and $mimeType == $field) {
 					$url=get_option('tecaSolrSchedaURLShowObject','default_value').'?id='.$id;
 				}
 			}
-		} elseif ($tipoOggetto == 'documento'){
+		} elseif ($tipoOggetto == 'documento' && !$root==''){
 			$query = new SolrQuery ();
 			$solrQuery='id:'.$root;
-			
+
 			$query->setQuery ( $solrQuery);
 			$query->setStart ( 0 );
 			$query->setRows ( get_option('tecaSolrSearchPage','10') );
-			
+
 			$query->addField ("tipoOggetto_show");
 			$query->addField ("mimeType_show");
 			$query->addField ("id");
 			$query->addField ("_root_");
+			$query->addField ("padre");
 
 			$query->addParam ( 'wt', 'xml' );
-			
+
 			$query_response = $client->query ( $query );
-			
+
 			$resp = $query_response->getResponse ();
 			if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]==''){
 				$url="";
@@ -484,19 +491,22 @@ class MDSolr extends MDSolrFacet {
 				if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'file' or
 						$resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'documento'){
 
-					$tipoOggetto = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0];
-					$mimeTypes = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('mimeType_show');
-					$mimeType = "";
-					if (isset($mimeTypes)){
-						$mimeType = $mimeTypes[0];
-					}
-					$id = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('id');
-					$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('_root_');
-					if (!isset($root)){
-						$root = "";
-					}
-		
-					$url = $this->checkShowObject($tipoOggetto, $mimeType, $id, $client, $root);
+							$tipoOggetto = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0];
+							$mimeTypes = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('mimeType_show');
+							$mimeType = "";
+							if (isset($mimeTypes)){
+								$mimeType = $mimeTypes[0];
+							}
+							$id = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('id');
+							$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('_root_');
+							if (!isset($root)){
+								$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('padre');
+								if (!isset($root)){
+									$root = "";
+								}
+							}
+
+							$url = $this->checkShowObject($tipoOggetto, $mimeType, $id, $client, $root);
 				}
 			}
 		}
@@ -504,7 +514,7 @@ class MDSolr extends MDSolrFacet {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param unknown $id
 	 * @return string
 	 */
@@ -513,35 +523,35 @@ class MDSolr extends MDSolrFacet {
 				'hostname' => get_option('tecaSolrServer','default_value'),
 				'port' => get_option('tecaSolrPort','default_value')
 		);
-	
+
 		$client = new SolrClient ( $options );
 		$client->setServlet ( SolrClient::SEARCH_SERVLET_TYPE, get_option('tecaSolrSearchServlet','default_value') );
-	
+
 		$query = new SolrQuery ();
 		if ($id !== ''){
 			$solrQuery='_root_:'.$id;
 		}
-	
+
 		$query->setQuery ( $solrQuery);
 		$query->setStart ( 0 );
 		$query->setRows ( 900 );
-	
+
 		$tecaSolrSearchField = get_option('tecaSolrSchedaFigliField','default_value');
-	
+
 		$fields = explode ( ",", $tecaSolrSearchField );
 		foreach ( $fields as &$field ) {
 			$query->addField ($field);
 		}
-	
+
 		$query->addSortField ( "titolo_sort", SolrQuery::ORDER_ASC );
 		$query->addSortField ( "originalFileName_sort", SolrQuery::ORDER_ASC );
 		$query->addSortField ( "eventType_sort", SolrQuery::ORDER_ASC );
-		
+
 		$query->addParam ( 'wt', 'xml' );
-	
+
 		#echo("SolrQ: ".$query->toString()."<br/>");
 		$query_response = $client->query ( $query );
-	
+
 		$response = $query_response->getRawResponse ();
 		$resp = $query_response->getResponse ();
 		if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]==''){
@@ -551,7 +561,7 @@ class MDSolr extends MDSolrFacet {
 					get_option('tecaSolrSchedaFigliXsl','components/com_tecaricerca/views/show/xsd/solrToSchedaFigli.xsl') );
 		}
 	}
-	
+
 	/**
 	 *
 	 * @param unknown $response
@@ -571,17 +581,17 @@ class MDSolr extends MDSolrFacet {
 			$this->avanti = $this->end;
 		}
 		$this->numFound = $tag_response->offsetGet ( 'numFound' );
-	
+
 		$div = $this->numFound / $this->recPag;
 		$pos = strpos ( $div, '.' );
 		$div = substr ( $div, 0, $pos );
 		$this->fine = ($div * $this->recPag);
-	
+
 		$this->QTime = $response->offsetGet ( 'responseHeader' )->offsetGet ( 'QTime' );
 	}
 
 	/**
-	 * 
+	 *
 	 * @param unknown $response
 	 * @return boolean
 	 */
@@ -589,9 +599,9 @@ class MDSolr extends MDSolrFacet {
 		$tag_response = $response->offsetGet ( 'response' );
 		return ($tag_response->offsetGet ('docs')[0]->offsetGet('tipologiaFile_show')[0] =='SchedaF');
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return number
 	 */
 	function getStart(){
@@ -647,7 +657,7 @@ class MDSolr extends MDSolrFacet {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return string|unknown
 	 */
 	function getRecPag() {
@@ -655,7 +665,7 @@ class MDSolr extends MDSolrFacet {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return string|unknown
 	 */
 	function getKeyword(){
@@ -663,7 +673,7 @@ class MDSolr extends MDSolrFacet {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return string|mixed
 	 */
 	function getValueSolr(){

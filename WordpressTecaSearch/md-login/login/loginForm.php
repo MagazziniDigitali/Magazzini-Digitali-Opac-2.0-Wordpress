@@ -9,14 +9,14 @@ include_once (MD_LOGIN_PATH . 'tools/crypting.php');
 function md_login_page() {
 	wp_register_style ( 'mdLogin', plugins_url ( 'md-login/css/mdLogin.css' ) );
 	wp_enqueue_style ( 'mdLogin' );
-	
+
 	wp_register_script ( 'mdLogin-js', plugins_url ( 'md-login/js/mdLogin.js' ) );
 	wp_enqueue_script ( 'mdLogin-js' );
-	
+
 	?>
 <div class="breadcrumbs">
     <?php
-	
+
 	if (function_exists ( 'bcn_display' )) {
 		bcn_display ();
 	}
@@ -27,7 +27,7 @@ function md_login_page() {
 	if (isset ( $_REQUEST ['j'] )) {
 		$datiInput = json_decode ( decrypting ( $_REQUEST ['j'] ) );
 		$userInput = $datiInput->userInput;
-		
+
 		$agentIdentifier = $_REQUEST ['istituto'];
 		if (is_array ( $datiInput->agent )) {
 			foreach ( $datiInput->agent as $key => $value ) {
@@ -40,36 +40,64 @@ function md_login_page() {
 				$agentName = $datiInput->agent->agentName;
 			}
 		}
-		$authenticationUserOutput = confirmWsdlObject ( $userInput->objectIdentifier->objectIdentifierType, 
-				$userInput->objectIdentifier->objectIdentifierValue, $userInput->identifier, $userInput->actualFileName, 
-				$userInput->originalFileName, $agentIdentifier, $agentName, 
-				$datiInput->rights->rightsIdentifier->rightsIdentifierType, 
-				$datiInput->rights->rightsIdentifier->rightsIdentifierValue, 
+		$authenticationUserOutput = confirmWsdlObject ( $userInput->objectIdentifier->objectIdentifierType,
+				$userInput->objectIdentifier->objectIdentifierValue, $userInput->identifier, $userInput->actualFileName,
+				$userInput->originalFileName, $agentIdentifier, $agentName,
+				$datiInput->rights->rightsIdentifier->rightsIdentifierType,
+				$datiInput->rights->rightsIdentifier->rightsIdentifierValue,
 				$datiInput->rights->rightsDisseminate->rightsDisseminateType, $_REQUEST ['login'], $_REQUEST ['password'] );
-		if (! empty ( $authenticationUserOutput->url ) and 
-				$authenticationUserOutput->rights->rightsDisseminate=='B') {
-			md_showObject ( $authenticationUserOutput->url );
-		} elseif (! empty ( $authenticationUserOutput->urlDocker )) {
-			md_showDokerObject ( $authenticationUserOutput->url );
-		} else {
-			md_Login_form ( $datiInput,  $authenticationUserOutput->errorMsg->msgError);
-		}
+		checkResult($datiInput, $authenticationUserOutput);
+//		var_dump($authenticationUserOutput->rights->rightsDisseminate->rightsDisseminateType);
+
+// 		if (! empty ( $authenticationUserOutput->url ) and
+// 				$authenticationUserOutput->rights->rightsDisseminate->rightsDisseminateType=='B') {
+// 			md_showObject ( $authenticationUserOutput->url );
+// 		} elseif (! empty ( $authenticationUserOutput->url ) and
+// 				$authenticationUserOutput->rights->rightsDisseminate->rightsDisseminateType=='C') {
+// 			md_showObject ( $authenticationUserOutput->url );
+// 		} elseif (! empty($authenticationUserOutput->errorMsg) and 
+// 				! empty($authenticationUserOutput->errorMsg->msgError)) {
+// 			md_Login_form ( $datiInput,  $authenticationUserOutput->errorMsg->msgError);
+// 		} else {
+// 			md_Login_form ( $datiInput,  "Errore Generico");
+// 		}
 	} elseif (isset ( $_REQUEST ['id'] )) {
 		$authenticationUserOutput = checkWsdlObject ( 'id', $_REQUEST ['id'] );
-		if (! empty ( $authenticationUserOutput->errorMsg )) {
-			md_msgError ( $authenticationUserOutput->errorMsg->msgError );
-		} elseif (! empty ( $authenticationUserOutput->url ) and 
-				$authenticationUserOutput->rights->rightsDisseminate=='B') {
-			md_showObject ( $authenticationUserOutput->url );
-		} elseif (! empty ( $authenticationUserOutput->url )) {
-			md_showDokerObject ( $authenticationUserOutput->url );
-		} else {
-			md_Login_form ( $authenticationUserOutput , "");
-		}
+		checkResult($authenticationUserOutput, $authenticationUserOutput);
+// 		if (! empty ( $authenticationUserOutput->errorMsg ) and 
+// 				! empty($authenticationUserOutput->errorMsg->msgError)) {
+// 			md_msgError ( $authenticationUserOutput->errorMsg->msgError );
+// 		} elseif (! empty ( $authenticationUserOutput->url ) and
+// 				$authenticationUserOutput->rights->rightsDisseminate->rightsDisseminateType=='B') {
+// 			md_showObject ( $authenticationUserOutput->url );
+// 		} elseif (! empty ( $authenticationUserOutput->url ) and
+//                                 $authenticationUserOutput->rights->rightsDisseminate->rightsDisseminateType=='C') {
+// 			md_showObject ( $authenticationUserOutput->url );
+// 		} else {
+// 			md_Login_form ( $authenticationUserOutput , "");
+// 		}
 	} else {
 		md_msgError ( 'Indicare le informazioni relative all\'oggetto da visionare' );
 	}
 	return ob_get_clean ();
+}
+
+function checkResult($datiInput, $output) {
+	if (! empty ( $output->url ) and
+			$output->rights->rightsDisseminate->rightsDisseminateType=='A') {
+		md_Login_form ( $datiInput,  "Materiale di tipo Archivio non visualizzabile");
+	} elseif (! empty ( $output->url ) and
+			$output->rights->rightsDisseminate->rightsDisseminateType=='B') {
+		md_showObject ( $output->url );
+	} elseif (! empty ( $output->url ) and
+			$output->rights->rightsDisseminate->rightsDisseminateType=='C') {
+		md_showObject ( $output->url );
+	} elseif (! empty($output->errorMsg) and
+			! empty($output->errorMsg->msgError)) {
+		md_Login_form ( $datiInput,  $output->errorMsg->msgError);
+	} else {
+		md_Login_form ( $datiInput,  "Errore Generico");
+	}
 }
 
 function md_showDokerObject($url) {
@@ -114,7 +142,7 @@ function md_Login_form($authenticationUserOutput, $msgError) {
 			?>
 		</div>
 		<?php
-				
+
 	}
 	echo '<div class="tecaLoginForm">';
 	echo '  <form action="' . esc_url ( $_SERVER ['REQUEST_URI'] ) . '" method="GET" id="tecaLoginForm" name="tecaLoginForm">';

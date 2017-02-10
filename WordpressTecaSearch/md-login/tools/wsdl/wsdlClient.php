@@ -1,6 +1,6 @@
 <?php
 class WsdlException extends Exception {
-	
+
 }
 
 function authenticationSoftware(){
@@ -26,6 +26,7 @@ function checkWsdlObject($objectIdentifierType, $objectIdentifierValue){
 		//   var_dump($gsearch->__getTypes());
 		//   print ("<br/>ESEGUO<br/>");
 
+		// print ("<br/>ESEGUO AAAAAA<br/>");
 		$params = array(
 				'userInput' => array(
 						'objectIdentifier' => array (
@@ -36,7 +37,8 @@ function checkWsdlObject($objectIdentifierType, $objectIdentifierValue){
 				));
 
 		$result = $gsearch->AuthenticationUserLibraryOperation($params);
-//		var_dump($result);
+		// print ("<br/>ESEGUO<br/>");
+		// print ($result);
 
 	} catch (SoapFault $e) {
 		throw new WsdlException('Riscontrato un errore nella verifica dell\'oggetto ['.$e->getMessage().']');
@@ -46,56 +48,56 @@ function checkWsdlObject($objectIdentifierType, $objectIdentifierValue){
 	return $result;
 }
 
-function confirmWsdlObject($objectIdentifierType, $objectIdentifierValue, $identifier, $actualFileName, 
+function confirmWsdlObject($objectIdentifierType, $objectIdentifierValue, $identifier, $actualFileName,
 		$originalFileName, $agentIdentifier, $agentName, $rightsIdentifierType, $rightsIdentifierValue,
 		$rightsDisseminateType, $login, $password){
-	try{
-		$software = authenticationSoftware();
-		$gsearch = new SoapClient(readParameter($software, 'AuthenticationUserLibraryPort'));
+			try{
+				$software = authenticationSoftware();
+				$gsearch = new SoapClient(readParameter($software, 'AuthenticationUserLibraryPort'));
 
-		//    var_dump($gsearch->__getFunctions());
-		//   var_dump($gsearch->__getTypes());
-		//   print ("<br/>ESEGUO<br/>");
+				//    var_dump($gsearch->__getFunctions());
+				//   var_dump($gsearch->__getTypes());
+				//   print ("<br/>ESEGUO<br/>");
 
-		$params = array(
-				'userInput' => array(
-						'objectIdentifier' => array (
-								'objectIdentifierType' => $objectIdentifierType,
-								'objectIdentifierValue' => $objectIdentifierValue
-						),
-						'software' => $software,
-						'ipClient' => getIpClient(),
-						'identifier' => $identifier,
-						'actualFileName' => $actualFileName,
-						'originalFileName' => $originalFileName,
-						'agent' => array(
-								'agentIdentifier' => $agentIdentifier,
-								'agentName' => $agentName
-						),
-						'rights' => array(
-								'rightsIdentifier' => array(
-										'rightsIdentifierType' => $rightsIdentifierType,
-										'rightsIdentifierValue' => $rightsIdentifierValue
+				$params = array(
+						'userInput' => array(
+								'objectIdentifier' => array (
+										'objectIdentifierType' => $objectIdentifierType,
+										'objectIdentifierValue' => $objectIdentifierValue
 								),
-								'rightsDisseminate' => array(
-										'rightsDisseminateType' => $rightsDisseminateType
+								'software' => $software,
+								'ipClient' => getIpClient(),
+								'identifier' => $identifier,
+								'actualFileName' => $actualFileName,
+								'originalFileName' => $originalFileName,
+								'agent' => array(
+										'agentIdentifier' => $agentIdentifier,
+										'agentName' => $agentName
+								),
+								'rights' => array(
+										'rightsIdentifier' => array(
+												'rightsIdentifierType' => $rightsIdentifierType,
+												'rightsIdentifierValue' => $rightsIdentifierValue
+										),
+										'rightsDisseminate' => array(
+												'rightsDisseminateType' => $rightsDisseminateType
+										)
+								),
+								'authentication' => array(
+										'login' => $login,
+										'password' => $password
 								)
-						),
-						'authentication' => array(
-								'login' => $login,
-								'password' => $password
-						)
-				));
+						));
 
-		$result = $gsearch->AuthenticationUserLibraryOperation($params);
-		//		var_dump($result);
+				$result = $gsearch->AuthenticationUserLibraryOperation($params);
+				// var_dump($result->rights);
 
-	} catch (SoapFault $e) {
-		throw new WsdlException('Riscontrato un errore nella verifica dell\'oggetto ['.$e->getMessage().']');
-	} catch (WsdlException $e){
-		throw $e;
-	}
-	return $result;
+			} catch (SoapFault $e) {
+				throw new WsdlException('Riscontrato un errore nella verifica dell\'oggetto ['.$e->getMessage().']');
+			} catch (WsdlException $e){
+				throw $e;
+			}
+			return $result;
 }
 
 function readParameter($software, $key){

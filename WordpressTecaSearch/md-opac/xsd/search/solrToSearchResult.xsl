@@ -16,16 +16,18 @@
                 <xsl:attribute name="class">pari</xsl:attribute>
             </xsl:if>
             <td>
+                <!--
             	tipoOggetto_show: <xsl:copy-of
                     select="arr[@name='tipoOggetto_show']/str"/><br/>
+-->
                 <a title="breve">
                     <xsl:for-each select="str[@name='id']">
                         <xsl:attribute name="onclick"
-                                >
+                            >
                             showScheda('<xsl:copy-of
                                 select="child::text()"/>');</xsl:attribute>
                     </xsl:for-each>
-
+                    
                     <xsl:choose>
                         <xsl:when test="arr[@name='tipoOggetto_show']/str='contenitore'">
                             <xsl:apply-templates select="arr[@name='originalFileName_show']"/>
@@ -65,13 +67,16 @@
                         <xsl:when test="arr[@name='tipoOggetto_show']/str='diritti'">
                             <xsl:apply-templates select="arr[@name='rightsBasis_show']"/>
                         </xsl:when>
+                        <xsl:when test="arr[@name='tipoOggetto_show']/str='registro'">
+                            <xsl:apply-templates select="arr[@name='originalFileName_show']"/>
+                        </xsl:when>
                         <xsl:otherwise>
                             ALTRO
                             <xsl:apply-templates select="arr[@name='tipoOggetto_show']"/>
                             <xsl:apply-templates select="arr[@name='originalFileName_show']"/>
                         </xsl:otherwise>
                     </xsl:choose>
-
+                    
                 </a>
             </td>
         </tr>
@@ -106,7 +111,7 @@
             <xsl:copy-of select="str"/>
         </b>
     </xsl:template>
-
+    
     <xsl:template match="arr[@name='size_show']">
         Dimensione: <b>
             <xsl:copy-of select="str"/>
@@ -118,17 +123,17 @@
             <xsl:copy-of select="str"/>
         </b><br/>
     </xsl:template>
-
+    
     <xsl:template match="arr[@name='titolo_show']">
         <xsl:choose>
             <xsl:when test="../arr[@name='tipologiaFile_show']/str/child::text()='SoggettoConservatore'">
-                Istituto: 
+                Istituto:
             </xsl:when>
             <xsl:when test="../arr[@name='tipologiaFile_show']/str/child::text()='ComplessoArchivistico'">
-                Complesso Archivistico: 
+                Complesso Archivistico:
             </xsl:when>
             <xsl:otherwise>
-                Titolo: 
+                Titolo:
             </xsl:otherwise>
         </xsl:choose>
         <xsl:for-each select="str">
@@ -138,7 +143,7 @@
             <b><xsl:copy-of select="."/></b><br/>
         </xsl:for-each>
     </xsl:template>
-
+    
     <xsl:template match="arr[@name='inventario_show']">
         Inventario: <b>
             <xsl:for-each select="str">
@@ -147,7 +152,7 @@
             </xsl:for-each>
         </b><br/>
     </xsl:template>
-
+    
     <xsl:template match="arr[@name='collocazione_show']">
         Collocazione: <b>
             <xsl:for-each select="str">
@@ -155,14 +160,14 @@
                 <xsl:copy-of select="."/>
             </xsl:for-each>
         </b>
-    </xsl:template> 
-
+    </xsl:template>
+    
     <xsl:template match="arr[@name='eventType_show']">
         Tipo Evento: <b>
             <xsl:copy-of select="str"/>
         </b>
     </xsl:template>
-
+    
     <xsl:template match="arr[@name='eventDate_show']">
         <xsl:for-each select="str">
             <xsl:if test="position()=1">Data Inizio Evento: </xsl:if>
@@ -170,15 +175,15 @@
             <b><xsl:copy-of select="."/></b>
         </xsl:for-each>
     </xsl:template>
-
+    
     <xsl:template match="arr[@name='eventOutCome_show']">
         Esito: <b>
             <xsl:copy-of select="str"/>
         </b>
     </xsl:template>
-
+    
     <xsl:template match="arr[@name='tipoOggetto_show']">
-        Tipo Oggetto: 
+        Tipo Oggetto:
         <b><xsl:copy-of select="str"/></b>
     </xsl:template>
 </xsl:stylesheet>

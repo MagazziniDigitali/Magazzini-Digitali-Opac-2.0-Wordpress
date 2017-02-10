@@ -1,7 +1,7 @@
 <?php
 include_once (MD_PLUGIN_PATH . 'tools/form/createForm.php');
 class adminConfig {
-	
+
 	/**
 	 */
 	function __construct() {
@@ -35,7 +35,7 @@ class adminConfig {
 			return NULL;
 		}
 	}
-	
+
 	/**
 	 * Indica la lista dei campi visualizzati nella ricostruzione breve per
 	 * la dase dati Sast
@@ -55,10 +55,10 @@ class adminConfig {
 				"collocazione_show" => "Collocazione",
 				"eventType_show" => "Event Type",
 				"eventDate_show" => "Event Date",
-				"eventOutCome_show" => "Event Out Come" 
+				"eventOutCome_show" => "Event Out Come"
 		);
 	}
-	
+
 	/**
 	 * Indica la lista dei campi visualizzati nella ricostruzione breve per
 	 * la dase dati Magazzini Digitali
@@ -78,13 +78,13 @@ class adminConfig {
 				"collocazione_show" => "Collocazione",
 				"eventType_show" => "Event Type",
 				"eventDate_show" => "Event Date",
-				"eventOutCome_show" => "Event Out Come", 
+				"eventOutCome_show" => "Event Out Come",
 				"agentName_show" => "Agent Name",
 				"agentType_show" => "Agent Type",
 				"rightsBasis_show" => "Rigths Basis"
 		);
 	}
-	
+
 	/**
 	 * Indica la lista dei possibili indici nella breve
 	 *
@@ -107,7 +107,7 @@ class adminConfig {
 			return NULL;
 		}
 	}
-	
+
 	/**
 	 * Indica la lista dei possibili indici nella breve per
 	 * la dase dati Sast
@@ -116,10 +116,10 @@ class adminConfig {
 	 */
 	private function tecaSolrSearchSortSast() {
 		return array (
-				"soggettoConservatore_sort asc, fondo_sort asc, subFondo_sort asc, collocazione_sort asc" => "Soggetto Conservatore Asc, Fondo Asc, subFondo Asc, Collocazione Asc" 
+				"soggettoConservatore_sort asc, fondo_sort asc, subFondo_sort asc, collocazione_sort asc" => "Soggetto Conservatore Asc, Fondo Asc, subFondo Asc, Collocazione Asc"
 		);
 	}
-	
+
 	/**
 	 * Indica la lista dei possibili indici nella breve per
 	 * la dase dati Sast
@@ -128,10 +128,10 @@ class adminConfig {
 	 */
 	private function tecaSolrSearchSortMD() {
 		return array (
-				"collocazione_sort asc" => "Collocazione Asc" 
+				"collocazione_sort asc" => "Collocazione Asc"
 		);
 	}
-	
+
 	/**
 	 * Indica la lista dei possibili indici nella breve
 	 *
@@ -154,7 +154,7 @@ class adminConfig {
 			return NULL;
 		}
 	}
-	
+
 	/**
 	 * Indica la lista dei possibili indici nella breve per
 	 * la dase dati Sast
@@ -168,10 +168,10 @@ class adminConfig {
 				"fondo_fc#fondoKey_fc#soggettoConservatoreKey_fc#tipologiaFile_fc#fondoScheda_fc" => "Fondo",
 				"subFondo_fc#subFondoKey_fc#subFondoScheda_fc" => "Sotto Livelli",
 				"subFondo2_fc#subFondo2Key_fc#subFondo2Scheda_fc" => "Sotto Livelli2",
-				"subFondo3_fc#subFondo3Key_fc#subFondo3Scheda_fc" => "Sotto Livelli3" 
+				"subFondo3_fc#subFondo3Key_fc#subFondo3Scheda_fc" => "Sotto Livelli3"
 		);
 	}
-	
+
 	/**
 	 * Indica la lista dei possibili indici nella breve per
 	 * la dase dati Sast
@@ -181,16 +181,17 @@ class adminConfig {
 	public function tecaSolrSearchFacetPivotMD() {
 		return array (
 				"tipoOggetto_fc" => "Tipo Oggetto",
+				"fileType_fc" => "Tipo File",
+				"tipoContenitore_fc" => "Tipo Contenitore",
 				"documento_fc" => "Documenti (Rapresentation)",
 				"autore_fc" => "Autori",
 				"titolo_fc" => "Titoli",
 				"data_fc" => "Data pubblicazione",
-				"tipoContenitore_fc" => "Tipo file",
 				"eventType_fc" => "Eventi",
-				"agentSoftware_fc" => "Agente Software" 
+				"agentSoftware_fc" => "Agente Software"
 		);
 	}
-	
+
 	/**
 	 * Indica la lista dei possibili indici nella breve
 	 *
@@ -213,7 +214,7 @@ class adminConfig {
 			return NULL;
 		}
 	}
-	
+
 	/**
 	 * Indica la lista dei possibili indici nella breve per
 	 * la dase dati Sast
@@ -300,10 +301,10 @@ class adminConfig {
 				"tipoEnte_show" => "Tipo Ente",
 				"ambitoTerritoriale_show" => "Ambito Territoriale",
 				"contenuto_show" => "Contenuto",
-				"sottoUnita_show" => "Sotto Unità" 
+				"sottoUnita_show" => "Sotto Unità"
 		);
 	}
-	
+
 	/**
 	 * Indica la lista dei possibili indici nella breve per
 	 * la dase dati Sast
@@ -319,7 +320,8 @@ class adminConfig {
 				"journalBid_show" => "Journal Bid",
 				"journalBidUrl_show" => "Journal Bid Url",
 				"collocazione_show" => "Collocazione",
-				"_root_" => "Collegamento Scheda Padre",
+				"_root_" => "Collegamento Scheda Root",
+				"padre" => "Collegamento Scheda Padre",
 				"titolo_show" => "Titolo",
 				"journalTitolo_show" => "Journal Titolo",
 				"lingua_show" => "Lingua",
@@ -384,6 +386,18 @@ class adminConfig {
 				"rightsStatuteJurisdiction_show" => "Rigths Statute Jurisdiction",
 				"rightsStatuteCitation_show" => "Rigths Statute Citation",
 				"nbn_show" => "NBN",
+				"agentMachine_show" => "Agent Machine",
+				"registroId_show" => "Registro Ingressi ID",
+				"registroTimeStampIngest_show" => "Registro Ingressi Data Ora Ingest",
+				"registroContainerFingerPrint_show" => "Registro Ingressi Finger Print",
+				"registroContainerFingerPrintChain_show" => "Registro Ingressi Finger Print Chain",
+				"registroContainerType_show" => "Registro Ingressi Container Type",
+				"registroStatus_show" => "Registro Ingressi Status",
+				"registroTimeStampInit_show" => "Registro Ingressi Data Ora Init",
+				"registroTimeStampElab_show" => "Registro Ingressi Data Ora Elaborazione",
+				"registroTimeStampCoda_show" => "Registro Ingressi Data Ora Coda",
+				"registroTimeStampPub_show" => "Registro Ingressi Data Ora Pubblicazione",
+				"registroTimeStampErr_show" => "Registro Ingressi Data Ora Errori",
 		);
 	}
 }
