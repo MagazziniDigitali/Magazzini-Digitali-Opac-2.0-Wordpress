@@ -297,7 +297,17 @@ function md_scheda() {
 					"parent" => "header-styles",
 					"size" => "100",
 					"std" => "/index.php/opac/login-oggetti-digitali/"
+			),
+			array (
+					"name" => "URL Richieste Visualizzazione",
+					"desc" => "Indirizzo URL il calcolo delle richieste di Visualizzazione",
+					"id" => "NumberViewPortWsdl",
+					"type" => "text",
+					"parent" => "header-styles",
+					"size" => "100",
+					"std" => "http://md-services.test.bncf.lan/MagazziniDigitaliServices/services/NumberViewPort?wsdl"
 			)
+			
 	);
 	?>
 <div class="wrap">

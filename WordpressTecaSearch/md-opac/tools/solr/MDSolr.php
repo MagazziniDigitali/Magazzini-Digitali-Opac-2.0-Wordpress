@@ -3,6 +3,7 @@ include_once (MD_PLUGIN_PATH . 'tools/converter.php');
 include_once (MD_PLUGIN_PATH . 'tools/molliche.php');
 include_once (MD_PLUGIN_PATH . 'tools/stringManipolator.php');
 include_once( MD_PLUGIN_PATH . 'tools/solr/MDSolrFacet.php' );
+include_once( MD_PLUGIN_PATH . 'tools/wsdl/wsdlClient.php' );
 
 /**
  * Classe utilizzata pe la gestione dei metodo per la gestione dell'accesso alla base dati Solr
@@ -428,26 +429,33 @@ class MDSolr extends MDSolrFacet {
 				if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'file' or
 						$resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'documento'){
 
-							$tipoOggetto = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0];
-							$mimeTypes = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('mimeType_show');
-							$mimeType = "";
-							if (isset($mimeTypes)){
-								$mimeType = $mimeTypes[0];
-							}
-							$id = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('id');
-							$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('_root_');
-							if (!isset($root)){
-								$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('padre');
-								if (!isset($root)){
-					    $root="";
-								}
-							}
+					$tipoOggetto = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0];
+					$mimeTypes = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('mimeType_show');
+					$mimeType = "";
+					if (isset($mimeTypes)){
+						$mimeType = $mimeTypes[0];
+					}
+					$id = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('id');
+					$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('_root_');
+					if (!isset($root)){
+						$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('padre')[0];
+						if (!isset($root)){
+					    	$root="";
+						}
+					}
 
-							$url = $this->checkShowObject($tipoOggetto, $mimeType, $id, $client, $root);
+					$url = $this->checkShowObject($tipoOggetto, $mimeType, $id, $client, $root);
 
-							if ($url != ""){
-								$response = str_replace('<doc>','<doc><urlObj>'.$url.'</urlObj>',$response);
-							}
+					if ($url != ""){
+						$response = str_replace('<doc>','<doc><urlObj>'.$url.'</urlObj>',$response);
+					}
+					$numberView = 0;
+					try {
+						$numberView = numberView($id);
+					} catch (WsdlExceptionOpac $e){
+						$numberView = 0;
+					}
+					$response = str_replace('<doc>','<doc><numberView>'.$numberView.'</numberView>',$response);
 				}
 				return convertToHtml ( $response,
 						get_option('tecaSolrSchedaXsl','components/com_tecaricerca/views/show/xsd/solrToScheda.xsl') );
@@ -500,7 +508,7 @@ class MDSolr extends MDSolrFacet {
 							$id = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('id');
 							$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('_root_');
 							if (!isset($root)){
-								$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('padre');
+								$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('padre')[0];
 								if (!isset($root)){
 									$root = "";
 								}

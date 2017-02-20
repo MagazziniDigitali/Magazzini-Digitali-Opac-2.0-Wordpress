@@ -21,7 +21,7 @@ function md_Search_Result() {
 }
 
 function md_Search($mdSolr){
-	echo '<a href="javascript:history.back()">torna indietro</a>';
+//	echo '<a href="javascript:history.back()">torna indietro</a>';
 	echo '<div class="tecaSearchForm">';
 	echo '  <form action="' . esc_url( $_SERVER['REQUEST_URI'] ) . '" method="GET" id="tecaSearchForm" name="tecaSearchForm">';
 	echo '    <fieldset class="tecaSearchForm">';

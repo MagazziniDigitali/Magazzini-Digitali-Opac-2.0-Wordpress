@@ -180,10 +180,10 @@ class adminConfig {
 	 */
 	public function tecaSolrSearchFacetPivotMD() {
 		return array (
-				"tipoOggetto_fc" => "Tipo Oggetto",
-				"fileType_fc" => "Tipo File",
+				"tipoOggetto_fc" => "Oggetto",
+				"fileType_fc" => "Contenitore",
+				"mimeType_fc" => "Tipo File	",
 				"tipoContenitore_fc" => "Tipo Contenitore",
-				"documento_fc" => "Documenti (Rapresentation)",
 				"autore_fc" => "Autori",
 				"titolo_fc" => "Titoli",
 				"data_fc" => "Data pubblicazione",

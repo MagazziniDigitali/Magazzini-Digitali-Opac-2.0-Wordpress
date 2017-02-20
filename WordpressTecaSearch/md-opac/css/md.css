@@ -93,3 +93,10 @@ table#scheda td#valueB{
 table#scheda td#valueB a{
 	cursor: pointer;
 }
+
+p.numberView{
+	float: right;
+    margin-bottom: 0;
+    margin-left: 10px;
+    margin-top: 0;
+}

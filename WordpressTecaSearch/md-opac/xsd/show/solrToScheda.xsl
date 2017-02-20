@@ -644,16 +644,23 @@
         <xsl:if test="../urlObj">
             <tr>
                 <td colspan="2">
+                    <b>Visualizza Oggetti Digitali</b>
                     <a title="Visualizza Oggetti digitali" id="viewImg">
                         <xsl:attribute name="href"><xsl:copy-of select="../urlObj/child::text()" /></xsl:attribute>
                         <img alt="Visualizza Oggetti Digitali" class="objDigit" src="/wp-content/plugins/md-opac/images/xlimage/images/object.gif"/>
-                        <b>Visualizza Oggetti Digitali</b>
                     </a>
-                    <a title="Visualizza Oggetti digitali" id="viewImgBlank"  target="_blank">
+                    <a title="Visualizza Oggetti digitali Finestra Separata" id="viewImgBlank"  target="_blank">
                         <xsl:attribute name="href"><xsl:copy-of select="../urlObj/child::text()" /></xsl:attribute>
                         <img alt="Visualizza Oggetti Digitali Finestra Separata" class="objDigitBlank" src="/wp-content/plugins/md-opac/images/xlimage/images/object_blank.gif"/>
-                        <b>Visualizza Oggetti Digitali Finestra Separata</b>
+                        <!--b>Visualizza Oggetti Digitali Finestra Separata</b -->
                     </a>
+                    <p class="numberView" id="numberView">Visualizzato
+                        <xsl:choose>
+                            <xsl:when test="not(../numberView)">0 Volte</xsl:when>
+                            <xsl:when test="../numberView/child::text()=1">1 Volta</xsl:when>
+                            <xsl:otherwise><xsl:copy-of select="../numberView/child::text()" /> Volte</xsl:otherwise>
+                        </xsl:choose>
+                    </p>
                 </td>
             </tr>
         </xsl:if>
