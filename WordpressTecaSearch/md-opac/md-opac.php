@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Magazzini Digitali - Opac
-Version: 2.0.5
+Version: 2.0.6
 Description: Intrfacci Opac per Magazzini Digitali
 Author: Massimiliano Randazzo
 Author URI: http://www.depositolegale.it

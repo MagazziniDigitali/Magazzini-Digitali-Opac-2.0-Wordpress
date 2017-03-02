@@ -158,7 +158,7 @@
     <xsl:template match="arr[@name='promon_show']">
         <tr>
             <td id="testoB">
-                Promon
+                Pronom
             </td>
             <td id="valueB">
                 <xsl:for-each select="str">

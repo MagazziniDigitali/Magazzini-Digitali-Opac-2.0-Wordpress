@@ -9,7 +9,8 @@ class adminConfig {
 
 	function tecaSolrMimeTypeShow(){
 		$createForm = new CreateForm ();
-		$mimeType = array("application/pdf" => "PDF");
+		$mimeType = array("application/pdf" => "PDF",
+                          "application/epub+zip" => "EPUB");
 		return $createForm->genArrayMultiSelect ($mimeType);
 	}
 
@@ -182,7 +183,7 @@ class adminConfig {
 		return array (
 				"tipoOggetto_fc" => "Oggetto",
 				"fileType_fc" => "Contenitore",
-				"mimeType_fc" => "Tipo File	",
+				"mimeType_fc" => "Tipo File",
 				"tipoContenitore_fc" => "Tipo Contenitore",
 				"autore_fc" => "Autori",
 				"titolo_fc" => "Titoli",

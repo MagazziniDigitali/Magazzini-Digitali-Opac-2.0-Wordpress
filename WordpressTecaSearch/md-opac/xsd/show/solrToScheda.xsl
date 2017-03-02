@@ -728,7 +728,7 @@
                         Documento non cartografico di riferimento
                     </xsl:when>
                     <xsl:otherwise>
-                        Oggetto padre collegata 2
+                        Oggetto padre collegata
                     </xsl:otherwise>
                 </xsl:choose>
             </td>

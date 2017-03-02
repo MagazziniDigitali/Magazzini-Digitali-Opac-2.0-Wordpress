@@ -282,7 +282,7 @@ class MDSolr extends MDSolrFacet {
 			if ($solrQuery == '*:*') {
 				$solrQuery = '';
 			}
-			$solrQuery .= ' ' . str_replace ( '_fc:', ':', $this->facetQuery);
+			$solrQuery .= ' ' . str_replace('\"','"',str_replace ( '_fc:', ':', $this->facetQuery));
 		}
 
 		$tecaSolrSearchExclude = get_option ( 'tecaSolrSearchExclude' );
@@ -292,6 +292,7 @@ class MDSolr extends MDSolrFacet {
 				$solrQuery .= ' NOT ' . $exclude;
 			}
 		}
+
 		$query->setQuery ( $solrQuery );
 		$query->setStart ( $this->qStart );
 		$query->setRows ( $this->recPag );
@@ -539,6 +540,14 @@ class MDSolr extends MDSolrFacet {
 		if ($id !== ''){
 			$solrQuery='_root_:'.$id;
 		}
+
+		$tecaSolrSearchExclude = get_option ( 'tecaSolrSearchExclude' );
+                if (isset($tecaSolrSearchExclude) && $tecaSolrSearchExclude != ''){
+                        $excludes = explode ( "\r", $tecaSolrSearchExclude );
+                        foreach ( $excludes as &$exclude ) {
+                                $solrQuery .= ' NOT ' . $exclude;
+                        }
+                }
 
 		$query->setQuery ( $solrQuery);
 		$query->setStart ( 0 );

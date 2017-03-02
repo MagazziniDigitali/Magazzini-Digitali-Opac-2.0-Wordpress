@@ -68,6 +68,7 @@ table.tecaSearchNavigator td.lRecPag {
 }
 table.tecaSearchNavigator td.iRecPag {
     width: -moz-min-content;
+    width:70px;
 }
 
 table.mdResultFacet {
