@@ -428,7 +428,8 @@ class MDSolr extends MDSolrFacet {
 			} else {
 				#echo ("NON SCHEDAF");
 				if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'file' or
-						$resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'documento'){
+						$resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'documento' or
+						$resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'contenitore'){
 
 					$tipoOggetto = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0];
 					$mimeTypes = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('mimeType_show');
@@ -466,58 +467,61 @@ class MDSolr extends MDSolrFacet {
 
 	function checkShowObject($tipoOggetto, $mimeType, $id, $client, $root){
 		$url="";
-		if ($tipoOggetto == 'file'){
-			$mimeTypeShow = get_option('tecaSolrSchedaMimeTypeShow','default_value');
+		if ($tipoOggetto == 'contenitore'){
+			$url=get_option('tecaSolrSchedaURLShowObject','default_value').'?id='.$id;
+		} elseif ($tipoOggetto == 'file'){
+// 			$mimeTypeShow = get_option('tecaSolrSchedaMimeTypeShow','default_value');
 
-			$fields = explode ( ",", $mimeTypeShow);
-			foreach ( $fields as &$field ) {
-				if ($url=="" and $mimeType == $field) {
+// 			$fields = explode ( ",", $mimeTypeShow);
+// 			foreach ( $fields as &$field ) {
+// 				if ($url=="" and $mimeType == $field) {
 					$url=get_option('tecaSolrSchedaURLShowObject','default_value').'?id='.$id;
-				}
-			}
+// 				}
+// 			}
 		} elseif ($tipoOggetto == 'documento' && !$root==''){
-			$query = new SolrQuery ();
-			$solrQuery='id:'.$root;
+			$url=get_option('tecaSolrSchedaURLShowObject','default_value').'?id='.$id;
+// 			$query = new SolrQuery ();
+// 			$solrQuery='id:'.$root;
 
-			$query->setQuery ( $solrQuery);
-			$query->setStart ( 0 );
-			$query->setRows ( get_option('tecaSolrSearchPage','10') );
+// 			$query->setQuery ( $solrQuery);
+// 			$query->setStart ( 0 );
+// 			$query->setRows ( get_option('tecaSolrSearchPage','10') );
 
-			$query->addField ("tipoOggetto_show");
-			$query->addField ("mimeType_show");
-			$query->addField ("id");
-			$query->addField ("_root_");
-			$query->addField ("padre");
+// 			$query->addField ("tipoOggetto_show");
+// 			$query->addField ("mimeType_show");
+// 			$query->addField ("id");
+// 			$query->addField ("_root_");
+// 			$query->addField ("padre");
 
-			$query->addParam ( 'wt', 'xml' );
+// 			$query->addParam ( 'wt', 'xml' );
 
-			$query_response = $client->query ( $query );
+// 			$query_response = $client->query ( $query );
 
-			$resp = $query_response->getResponse ();
-			if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]==''){
-				$url="";
-			} else {
-				if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'file' or
-						$resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'documento'){
+// 			$resp = $query_response->getResponse ();
+// 			if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]==''){
+// 				$url="";
+// 			} else {
+// 				if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'file' or
+// 						$resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'documento'){
 
-							$tipoOggetto = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0];
-							$mimeTypes = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('mimeType_show');
-							$mimeType = "";
-							if (isset($mimeTypes)){
-								$mimeType = $mimeTypes[0];
-							}
-							$id = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('id');
-							$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('_root_');
-							if (!isset($root)){
-								$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('padre')[0];
-								if (!isset($root)){
-									$root = "";
-								}
-							}
+// 							$tipoOggetto = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0];
+// 							$mimeTypes = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('mimeType_show');
+// 							$mimeType = "";
+// 							if (isset($mimeTypes)){
+// 								$mimeType = $mimeTypes[0];
+// 							}
+// 							$id = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('id');
+// 							$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('_root_');
+// 							if (!isset($root)){
+// 								$root = $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('padre')[0];
+// 								if (!isset($root)){
+// 									$root = "";
+// 								}
+// 							}
 
-							$url = $this->checkShowObject($tipoOggetto, $mimeType, $id, $client, $root);
-				}
-			}
+// 							$url = $this->checkShowObject($tipoOggetto, $mimeType, $id, $client, $root);
+// 				}
+// 			}
 		}
 		return $url;
 	}

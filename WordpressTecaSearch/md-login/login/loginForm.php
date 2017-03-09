@@ -28,54 +28,35 @@ function md_login_page() {
 		$datiInput = json_decode ( decrypting ( $_REQUEST ['j'] ) );
 		$userInput = $datiInput->userInput;
 
-		$agentIdentifier = $_REQUEST ['istituto'];
-		if (is_array ( $datiInput->agent )) {
-			foreach ( $datiInput->agent as $key => $value ) {
-				if ($datiInput->agent [$key]->agentIdentifier == $agentIdentifier) {
-					$agentName = $datiInput->agent [$key]->agentName;
+		$typeAuth = $_REQUEST ['typeAuth'];
+		// echo ('TypAuth: '.$typeAuth.'<br/>');
+		if ($typeAuth == 'utente'){
+			$agentIdentifier = $_REQUEST ['istituto'];
+			if (is_array ( $datiInput->agent )) {
+				foreach ( $datiInput->agent as $key => $value ) {
+					if ($datiInput->agent [$key]->agentIdentifier == $agentIdentifier) {
+						$agentName = $datiInput->agent [$key]->agentName;
+					}
+				}
+			} else {
+				if ($datiInput->agent->agentIdentifier == $agentIdentifier) {
+					$agentName = $datiInput->agent->agentName;
 				}
 			}
 		} else {
-			if ($datiInput->agent->agentIdentifier == $agentIdentifier) {
-				$agentName = $datiInput->agent->agentName;
-			}
+			$agentIdentifier = null;
+			$agentName = null;
 		}
 		$authenticationUserOutput = confirmWsdlObject ( $userInput->objectIdentifier->objectIdentifierType,
 				$userInput->objectIdentifier->objectIdentifierValue, $userInput->identifier, $userInput->actualFileName,
-				$userInput->originalFileName, $agentIdentifier, $agentName,
+				$userInput->originalFileName, $userInput->tipoOggetto, $userInput->mimeType, $userInput->depositante, $typeAuth, $agentIdentifier, $agentName,
 				$datiInput->rights->rightsIdentifier->rightsIdentifierType,
 				$datiInput->rights->rightsIdentifier->rightsIdentifierValue,
 				$datiInput->rights->rightsDisseminate->rightsDisseminateType, $_REQUEST ['login'], $_REQUEST ['password'] );
 		checkResult($datiInput, $authenticationUserOutput);
-//		var_dump($authenticationUserOutput->rights->rightsDisseminate->rightsDisseminateType);
-
-// 		if (! empty ( $authenticationUserOutput->url ) and
-// 				$authenticationUserOutput->rights->rightsDisseminate->rightsDisseminateType=='B') {
-// 			md_showObject ( $authenticationUserOutput->url );
-// 		} elseif (! empty ( $authenticationUserOutput->url ) and
-// 				$authenticationUserOutput->rights->rightsDisseminate->rightsDisseminateType=='C') {
-// 			md_showObject ( $authenticationUserOutput->url );
-// 		} elseif (! empty($authenticationUserOutput->errorMsg) and 
-// 				! empty($authenticationUserOutput->errorMsg->msgError)) {
-// 			md_Login_form ( $datiInput,  $authenticationUserOutput->errorMsg->msgError);
-// 		} else {
-// 			md_Login_form ( $datiInput,  "Errore Generico");
-// 		}
 	} elseif (isset ( $_REQUEST ['id'] )) {
 		$authenticationUserOutput = checkWsdlObject ( 'id', $_REQUEST ['id'] );
 		checkResult($authenticationUserOutput, $authenticationUserOutput);
-// 		if (! empty ( $authenticationUserOutput->errorMsg ) and 
-// 				! empty($authenticationUserOutput->errorMsg->msgError)) {
-// 			md_msgError ( $authenticationUserOutput->errorMsg->msgError );
-// 		} elseif (! empty ( $authenticationUserOutput->url ) and
-// 				$authenticationUserOutput->rights->rightsDisseminate->rightsDisseminateType=='B') {
-// 			md_showObject ( $authenticationUserOutput->url );
-// 		} elseif (! empty ( $authenticationUserOutput->url ) and
-//                                 $authenticationUserOutput->rights->rightsDisseminate->rightsDisseminateType=='C') {
-// 			md_showObject ( $authenticationUserOutput->url );
-// 		} else {
-// 			md_Login_form ( $authenticationUserOutput , "");
-// 		}
 	} else {
 		md_msgError ( 'Indicare le informazioni relative all\'oggetto da visionare' );
 	}
@@ -83,20 +64,13 @@ function md_login_page() {
 }
 
 function checkResult($datiInput, $output) {
-	if (! empty ( $output->url ) and
-			$output->rights->rightsDisseminate->rightsDisseminateType=='A') {
-		md_Login_form ( $datiInput,  "Materiale di tipo Archivio non visualizzabile");
-	} elseif (! empty ( $output->url ) and
-			$output->rights->rightsDisseminate->rightsDisseminateType=='B') {
-		md_showObject ( $output->url );
-	} elseif (! empty ( $output->url ) and
-			$output->rights->rightsDisseminate->rightsDisseminateType=='C') {
+	if (! empty ( $output->url )) { 
 		md_showObject ( $output->url );
 	} elseif (! empty($output->errorMsg) and
 			! empty($output->errorMsg->msgError)) {
 		md_Login_form ( $datiInput,  $output->errorMsg->msgError);
 	} else {
-		md_Login_form ( $datiInput,  "Errore Generico");
+		md_Login_form ( $datiInput);
 	}
 }
 
@@ -134,6 +108,16 @@ function md_msgError($msgErr) {
 }
 
 function md_Login_form($authenticationUserOutput, $msgError) {
+	wp_register_style ( 'captcha-bootstrap-css', plugins_url ( 'md-login/captcha/css/bootstrap-responsive.min.css' ) );
+	wp_enqueue_style ( 'captcha-bootstrap-css' );
+	wp_register_style ( 'captcha-main-css', plugins_url ( 'md-login/captcha/css/main.css' ) );
+	wp_enqueue_style ( 'captcha-main-css' );
+	?>
+	<script type="text/javascript">
+	  var $MDUrl = '<?php echo(esc_url ( $_SERVER ['REQUEST_URI'] )); ?>;
+	</script>
+		<script data-main="<?php echo(plugins_url ( 'md-login/captcha/js/app' ))?>" src="<?php echo(plugins_url ( 'md-login/captcha/js/vendor/require.js' ))?>"></script>
+<?php 	
 	if (isset($msgError)){
 		?>
 		<div class="md_login_error_display">
@@ -144,27 +128,82 @@ function md_Login_form($authenticationUserOutput, $msgError) {
 		<?php
 
 	}
-	echo '<div class="tecaLoginForm">';
-	echo '  <form action="' . esc_url ( $_SERVER ['REQUEST_URI'] ) . '" method="GET" id="tecaLoginForm" name="tecaLoginForm">';
-	echo '    <fieldset class="tecaLoginForm">';
-	echo '      <input type="hidden" name="j" value="' . crypting ( json_encode ( $authenticationUserOutput ) ) . '" />';
-	echo '      <legend>Login Page</legend>';
-	echo '      <table id="tecaLoginForm">';
-	echo '		  <tr><th>Istituzione:</th><td><select name="istituto">';
+?>
+<div class="tecaLoginForm">
+  <form action="#" method="GET" id="tecaLoginForm" name="tecaLoginForm" autocomplete="off" class="form-horizontal">
+    <fieldset class="tecaLoginForm">
+      <legend>Login Page</legend>
+      <input type="hidden" name="j" value="<?php echo(crypting ( json_encode ( $authenticationUserOutput ) ))?>" />
+      <div class="control-group">
+        <div class="controls">
+          <label class="inline" for="typeAuth">Tipo autenticazione:</label>
+          <input class="normal text radio" type="radio" name="typeAuth" value="editore" onchange="changeTypeAuth(this);"/> editore
+<?php 
+    if (isset($authenticationUserOutput->agent)){
+?>
+          <input class="normal text radio" type="radio" name="typeAuth" value="utente"  onchange="changeTypeAuth(this);"/> utente
+<?php 
+    }
+?>
+        </div>
+      </div>
+
+      <div class="rHidden" id="istituto">
+        <div class="controls">
+          <label class="inline" for="istituto">Istituzione:</label>
+          <select name="istituto" class="normal text select">
+<?php 
+  if (isset($authenticationUserOutput->agent)){
 	if (is_array ( $authenticationUserOutput->agent )) {
-		foreach ( $authenticationUserOutput->agent as $key => $value ) {
-			echo '<option value="' . $value->agentIdentifier . '">' . $value->agentName . '</option>';
-		}
-	} else {
-		echo '<option value="' . $authenticationUserOutput->agent->agentIdentifier . '">' . $authenticationUserOutput->agent->agentName . '</option>';
-	}
-	echo '</select></td></tr>';
-	echo '        <tr><th>Login:</th><td><input class="defaultText" title="Login:" type="text" name="login" value=""/></td></tr>';
-	echo '        <tr><th>Pasword:</th><td><input class="defaultText" title="Password:" type="password" name="password" value=""/></td></tr>';
-	echo '        <tr><th colspan="2"><input type="button" value="Login" onclick="cerca();"/></td></tr>';
-	echo '      </table>';
-	echo '    </fieldset>';
-	echo '  </form>';
-	echo '</div>';
+	  foreach ( $authenticationUserOutput->agent as $key => $value ) {
+?>
+		    <option value="<?php echo($value->agentIdentifier)?>"><?php echo($value->agentName)?></option>
+<?php 
+      }
+    } else {
+    	?>
+    	    <option value="<?php echo($authenticationUserOutput->agent->agentIdentifier)?>"><?php echo($authenticationUserOutput->agent->agentName)?></option>
+    	<?php 
+    }
+  }
+?>
+          </select>
+        </div>
+      </div>
+
+      <div class="rHidden" id="login">
+        <div class="controls">
+          <label class="inline" for="login">Login:</label>
+          <input class="normal text input" type="text" name="login" value=""/>
+        </div>
+      </div>
+
+      <div class="rHidden" id="password">
+        <div class="controls">
+          <label class="inline" for="password">Password:</label>
+          <input class="normal text password" type="password" name="password" value=""/>
+        </div>
+      </div>
+
+      <div class="rHidden" id="dCaptcha">
+        <div class="controls">
+          <label class="" for="captcha">Si prega di inserire il codice di verifica mostrato di seguito.</label>
+          <div id="captcha-wrap">
+            <img src="<?php echo(plugins_url ( 'md-login/captcha/img/refresh.jpg' ))?>" alt="ricarica captcha" id="refresh-captcha" /> 
+            <img src="<?php echo(plugins_url ( 'md-login/captcha/php/newCaptcha.php' ))?>" alt="" id="captcha" />
+          </div>
+          <input class="narrow text input" id="captcha" name="captcha" type="text" placeholder="Codice di verifica"/>
+        </div>
+      </div>
+
+      <div id="button" class="rHidden">
+        <div class="controls">
+          <input class="btn primary" type="submit" value="Login"/>
+        </div>
+      </div>
+	</fieldset>
+  </form>
+</div>
+<?php 
 }
 ?>

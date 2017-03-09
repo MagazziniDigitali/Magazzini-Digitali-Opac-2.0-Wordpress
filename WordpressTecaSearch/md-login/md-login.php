@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Magazzini Digitali - Login
-Version: 1.0
-Description: Intrfaccia Login per Magazzini Digitali
+Version: 2.0.7
+Description: Interfaccia Login per Magazzini Digitali
 Author: Massimiliano Randazzo
 Author URI: http://www.depositolegale.it
 */

@@ -34,6 +34,7 @@
 	    </xsl:if>
 	</table>
         <table id="scheda">
+            <xsl:copy-of select="arr[@name='tipoOggetto_show']/str/child::text()"/><br/>
             <xsl:apply-templates select="arr[@name='originalFileName_show']"/>
 
             <xsl:choose>

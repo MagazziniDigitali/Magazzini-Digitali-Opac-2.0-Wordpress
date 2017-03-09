@@ -49,46 +49,83 @@ function checkWsdlObject($objectIdentifierType, $objectIdentifierValue){
 }
 
 function confirmWsdlObject($objectIdentifierType, $objectIdentifierValue, $identifier, $actualFileName,
-		$originalFileName, $agentIdentifier, $agentName, $rightsIdentifierType, $rightsIdentifierValue,
+		$originalFileName, $tipoOggetto, $mimeType, $depositante, $typeAuth, $agentIdentifier, $agentName, $rightsIdentifierType, $rightsIdentifierValue,
 		$rightsDisseminateType, $login, $password){
 			try{
 				$software = authenticationSoftware();
 				$gsearch = new SoapClient(readParameter($software, 'AuthenticationUserLibraryPort'));
 
+				// echo ('typeAuth2222: '.$typeAuth.'<br/>');
 				//    var_dump($gsearch->__getFunctions());
 				//   var_dump($gsearch->__getTypes());
 				//   print ("<br/>ESEGUO<br/>");
 
-				$params = array(
-						'userInput' => array(
-								'objectIdentifier' => array (
-										'objectIdentifierType' => $objectIdentifierType,
-										'objectIdentifierValue' => $objectIdentifierValue
-								),
-								'software' => $software,
-								'ipClient' => getIpClient(),
-								'identifier' => $identifier,
-								'actualFileName' => $actualFileName,
-								'originalFileName' => $originalFileName,
-								'agent' => array(
-										'agentIdentifier' => $agentIdentifier,
-										'agentName' => $agentName
-								),
-								'rights' => array(
-										'rightsIdentifier' => array(
-												'rightsIdentifierType' => $rightsIdentifierType,
-												'rightsIdentifierValue' => $rightsIdentifierValue
-										),
-										'rightsDisseminate' => array(
-												'rightsDisseminateType' => $rightsDisseminateType
-										)
-								),
-								'authentication' => array(
-										'login' => $login,
-										'password' => $password
-								)
-						));
-
+				if ($agentIdentifier!= null){
+					$params = array(
+							'userInput' => array(
+									'objectIdentifier' => array (
+											'objectIdentifierType' => $objectIdentifierType,
+											'objectIdentifierValue' => $objectIdentifierValue
+									),
+									'software' => $software,
+									'ipClient' => getIpClient(),
+									'identifier' => $identifier,
+									'actualFileName' => $actualFileName,
+									'originalFileName' => $originalFileName,
+									'agent' => array(
+											'agentIdentifier' => $agentIdentifier,
+											'agentName' => $agentName
+									),
+									'rights' => array(
+											'rightsIdentifier' => array(
+													'rightsIdentifierType' => $rightsIdentifierType,
+													'rightsIdentifierValue' => $rightsIdentifierValue
+											),
+											'rightsDisseminate' => array(
+													'rightsDisseminateType' => $rightsDisseminateType
+											)
+									),
+									'authentication' => array(
+											'login' => $login,
+											'password' => $password
+									),
+									'mimeType' => $mimeType,
+									'tipoOggetto' => $tipoOggetto,
+									'depositante' => $depositante,
+									'typeAuth' => $typeAuth
+							));
+				} else {
+					$params = array(
+							'userInput' => array(
+									'objectIdentifier' => array (
+											'objectIdentifierType' => $objectIdentifierType,
+											'objectIdentifierValue' => $objectIdentifierValue
+									),
+									'software' => $software,
+									'ipClient' => getIpClient(),
+									'identifier' => $identifier,
+									'actualFileName' => $actualFileName,
+									'originalFileName' => $originalFileName,
+									'rights' => array(
+											'rightsIdentifier' => array(
+													'rightsIdentifierType' => $rightsIdentifierType,
+													'rightsIdentifierValue' => $rightsIdentifierValue
+											),
+											'rightsDisseminate' => array(
+													'rightsDisseminateType' => $rightsDisseminateType
+											)
+									),
+									'authentication' => array(
+											'login' => $login,
+											'password' => $password
+									),
+                                                                        'mimeType' => $mimeType,
+                                                                        'tipoOggetto' => $tipoOggetto,
+									'depositante' => $depositante,
+                                                                        'typeAuth' => $typeAuth
+							));
+					}
+				// var_dump($params);
 				$result = $gsearch->AuthenticationUserLibraryOperation($params);
 				// var_dump($result->rights);
 
