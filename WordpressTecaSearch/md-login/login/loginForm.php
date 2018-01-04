@@ -1,5 +1,6 @@
 <?php
 include_once (MD_LOGIN_PATH . 'tools/wsdl/wsdlClient.php');
+include_once (MD_LOGIN_PATH . 'tools/reCaptcha/reCaptcha.php');
 include_once (MD_LOGIN_PATH . 'tools/crypting.php');
 
 /**
@@ -25,35 +26,43 @@ function md_login_page() {
 <?php
 	ob_start ();
 	if (isset ( $_REQUEST ['j'] )) {
-		$datiInput = json_decode ( decrypting ( $_REQUEST ['j'] ) );
-		$userInput = $datiInput->userInput;
-
-		$typeAuth = $_REQUEST ['typeAuth'];
-		// echo ('TypAuth: '.$typeAuth.'<br/>');
-		if ($typeAuth == 'utente'){
-			$agentIdentifier = $_REQUEST ['istituto'];
-			if (is_array ( $datiInput->agent )) {
-				foreach ( $datiInput->agent as $key => $value ) {
-					if ($datiInput->agent [$key]->agentIdentifier == $agentIdentifier) {
-						$agentName = $datiInput->agent [$key]->agentName;
+		
+		if (checkReCaptcha()){
+			//print("SSSS:<BR\>");
+			//print("J:".$_REQUEST ['j']."<br/>");
+			$datiInput = json_decode ( decrypting ( $_REQUEST ['j'] ) );
+			$userInput = $datiInput->userInput;
+			//var_dump($datiInput);
+	
+			$typeAuth = $_REQUEST ['typeAuth'];
+			// echo ('TypAuth: '.$typeAuth.'<br/>');
+			if ($typeAuth == 'utente'){
+				$agentIdentifier = $_REQUEST ['istituto'];
+				if (is_array ( $datiInput->agent )) {
+					foreach ( $datiInput->agent as $key => $value ) {
+						if ($datiInput->agent [$key]->agentIdentifier == $agentIdentifier) {
+							$agentName = $datiInput->agent [$key]->agentName;
+						}
+					}
+				} else {
+					if ($datiInput->agent->agentIdentifier == $agentIdentifier) {
+						$agentName = $datiInput->agent->agentName;
 					}
 				}
 			} else {
-				if ($datiInput->agent->agentIdentifier == $agentIdentifier) {
-					$agentName = $datiInput->agent->agentName;
-				}
+				$agentIdentifier = null;
+				$agentName = null;
 			}
+			$authenticationUserOutput = confirmWsdlObject ( $userInput->objectIdentifier->objectIdentifierType,
+					$userInput->objectIdentifier->objectIdentifierValue, $userInput->identifier, $userInput->actualFileName,
+					$userInput->originalFileName, $userInput->tipoOggetto, $userInput->mimeType, $userInput->depositante, $typeAuth, $agentIdentifier, $agentName,
+					$datiInput->rights->rightsIdentifier->rightsIdentifierType,
+					$datiInput->rights->rightsIdentifier->rightsIdentifierValue,
+					$datiInput->rights->rightsDisseminate->rightsDisseminateType, $_REQUEST ['login'], $_REQUEST ['password'] );
+			checkResult($datiInput, $authenticationUserOutput);
 		} else {
-			$agentIdentifier = null;
-			$agentName = null;
+			md_Login_form ( $datiInput,  "&Egrave; necessario valorizzare tutti i campi");
 		}
-		$authenticationUserOutput = confirmWsdlObject ( $userInput->objectIdentifier->objectIdentifierType,
-				$userInput->objectIdentifier->objectIdentifierValue, $userInput->identifier, $userInput->actualFileName,
-				$userInput->originalFileName, $userInput->tipoOggetto, $userInput->mimeType, $userInput->depositante, $typeAuth, $agentIdentifier, $agentName,
-				$datiInput->rights->rightsIdentifier->rightsIdentifierType,
-				$datiInput->rights->rightsIdentifier->rightsIdentifierValue,
-				$datiInput->rights->rightsDisseminate->rightsDisseminateType, $_REQUEST ['login'], $_REQUEST ['password'] );
-		checkResult($datiInput, $authenticationUserOutput);
 	} elseif (isset ( $_REQUEST ['id'] )) {
 		$authenticationUserOutput = checkWsdlObject ( 'id', $_REQUEST ['id'] );
 		checkResult($authenticationUserOutput, $authenticationUserOutput);
@@ -108,15 +117,17 @@ function md_msgError($msgErr) {
 }
 
 function md_Login_form($authenticationUserOutput, $msgError) {
-	wp_register_style ( 'captcha-bootstrap-css', plugins_url ( 'md-login/captcha/css/bootstrap-responsive.min.css' ) );
-	wp_enqueue_style ( 'captcha-bootstrap-css' );
-	wp_register_style ( 'captcha-main-css', plugins_url ( 'md-login/captcha/css/main.css' ) );
-	wp_enqueue_style ( 'captcha-main-css' );
+	if (get_option ( 'mdLoginAuthenticationRecaptcha', '0' ) == '1'){
+		wp_register_script ( 'recaptcha-js', 'https://www.google.com/recaptcha/api.js' );
+		wp_enqueue_script ( 'recaptcha-js' );
+	}
 	?>
+<!-- 
 	<script type="text/javascript">
 	  var $MDUrl = '<?php echo(esc_url ( $_SERVER ['REQUEST_URI'] )); ?>;
 	</script>
 		<script data-main="<?php echo(plugins_url ( 'md-login/captcha/js/app' ))?>" src="<?php echo(plugins_url ( 'md-login/captcha/js/vendor/require.js' ))?>"></script>
+ -->
 <?php 	
 	if (isset($msgError)){
 		?>
@@ -130,7 +141,7 @@ function md_Login_form($authenticationUserOutput, $msgError) {
 	}
 ?>
 <div class="tecaLoginForm">
-  <form action="#" method="GET" id="tecaLoginForm" name="tecaLoginForm" autocomplete="off" class="form-horizontal">
+  <form action="<?php echo(esc_url ( $_SERVER ['REQUEST_URI'] )); ?>" method="POST" id="tecaLoginForm" name="tecaLoginForm">
     <fieldset class="tecaLoginForm">
       <legend>Login Page</legend>
       <input type="hidden" name="j" value="<?php echo(crypting ( json_encode ( $authenticationUserOutput ) ))?>" />
@@ -184,7 +195,7 @@ function md_Login_form($authenticationUserOutput, $msgError) {
           <input class="normal text password" type="password" name="password" value=""/>
         </div>
       </div>
-
+<!-- 
       <div class="rHidden" id="dCaptcha">
         <div class="controls">
           <label class="" for="captcha">Si prega di inserire il codice di verifica mostrato di seguito.</label>
@@ -195,9 +206,17 @@ function md_Login_form($authenticationUserOutput, $msgError) {
           <input class="narrow text input" id="captcha" name="captcha" type="text" placeholder="Codice di verifica"/>
         </div>
       </div>
+ -->
 
       <div id="button" class="rHidden">
         <div class="controls">
+<?php 
+if (get_option ( 'mdLoginAuthenticationRecaptcha', '0' ) == '1'){
+?>
+	<div class="g-recaptcha" data-sitekey="<?php echo (get_option('mdLoginAuthenticationRecaptchaChiaveSito', ''))?>"></div>
+<?php
+}
+?>
           <input class="btn primary" type="submit" value="Login"/>
         </div>
       </div>

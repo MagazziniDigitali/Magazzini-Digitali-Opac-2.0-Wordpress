@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 fieldset.tecaLoginForm {
-    background-color: #efefef;
+#    background-color: #efefef;
     border: 0 none;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -10,13 +10,13 @@ fieldset.tecaLoginForm {
 }
 
 fieldset.tecaLoginForm legend {
-    background-color: #607ab2;
+#    background-color: #607ab2;
     border-top: 2px solid #aec0e4;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    color: #ffffff;
+#    color: #ffffff;
     display: block;
-    font-size: 13px;
+#    font-size: 13px;
     line-height: inherit;
     margin-bottom: 5px;
     padding: 12px;
@@ -30,13 +30,13 @@ fieldset.tecaLoginForm legend {
 }
 
 div.tecaLoginForm h1 {
-	color: red;
+#	color: red;
 	text-align: center;
 }
 
 div.md_login_error_display {
 	color: red;
-    font-size: 25px;
+ #   font-size: 25px;
     padding-top: 10px;
     text-align: center;
 }

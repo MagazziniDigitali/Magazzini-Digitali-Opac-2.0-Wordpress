@@ -274,7 +274,7 @@ class MDSolr extends MDSolrFacet {
 		} else {
 			$pieces = explode ( " ", trim ( $keyword ) );
 			foreach ( $pieces as &$valuePieces ) {
-				$solrQuery .= ' +keywords:' . $valuePieces;
+				$solrQuery .= ' +keywords:' . str_replace('\"','"',str_replace ( ':', '\\:',$valuePieces));
 			}
 		}
 
@@ -285,6 +285,14 @@ class MDSolr extends MDSolrFacet {
 			$solrQuery .= ' ' . str_replace('\"','"',str_replace ( '_fc:', ':', $this->facetQuery));
 		}
 
+		if (isset ( $_REQUEST ['RA_Fields'] )) {
+                        $raFields = $_REQUEST ['RA_Fields'];
+			$xml = simplexml_load_string(hex2bin($raFields));
+			if ($xml->search != '') {
+				$solrQuery .= ' '.$xml->search;
+    			}
+                }
+
 		$tecaSolrSearchExclude = get_option ( 'tecaSolrSearchExclude' );
 		if (isset($tecaSolrSearchExclude) && $tecaSolrSearchExclude != ''){
 			$excludes = explode ( "\r", $tecaSolrSearchExclude );
@@ -292,7 +300,6 @@ class MDSolr extends MDSolrFacet {
 				$solrQuery .= ' NOT ' . $exclude;
 			}
 		}
-
 		$query->setQuery ( $solrQuery );
 		$query->setStart ( $this->qStart );
 		$query->setRows ( $this->recPag );
@@ -348,13 +355,17 @@ class MDSolr extends MDSolrFacet {
 		}
 		$query->addParam ( 'wt', 'xml' );
 
+		try {
 		$query_response = $client->query ( $query );
-
 		$response = $query_response->getRawResponse ();
-
 		$this->calcStatoPage($query_response->getResponse ());
-
 		$this->disFacetMenu ( $query_response->getResponse (), $this->facetQuery, MD_PLUGIN_URL );
+		} catch(Exception $e) {
+			echo 'Caught exception: ',  $e->getMessage(), "\n";
+		}
+
+
+
 
 		return convertToHtml ( $response, get_option ( 'tecaSolrSearchXsl', 'components/com_tecaricerca/views/search/xsd/solrToSearchResult.xsl' ) );
 	}

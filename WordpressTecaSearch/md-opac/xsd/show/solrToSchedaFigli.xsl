@@ -1,7 +1,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     version="1.0">
     <xsl:template match="/">
-        <center><h1>Opere collegate</h1></center>
+        <center><h1>informazioni sui documenti collegati</h1></center>
         <table id="schedaFigli">
             <xsl:apply-templates select="//response/result/doc"/>
         </table>

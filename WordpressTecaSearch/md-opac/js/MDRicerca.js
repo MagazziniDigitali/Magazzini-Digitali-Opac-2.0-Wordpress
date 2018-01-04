@@ -52,12 +52,72 @@ function cerca(qStart, recPag){
 	text = text.replace(new RegExp('%22','g'),'"');
         tecaSearchForm.elements["facetQuery"].value = text;
     }
+
+    x = document.getElementById("ricercaAvanzata");
+    if (x.style.display === 'block' &&
+        $('.chosen-select').val() != null) {
+      var raFiltri = document.getElementById('RA_filtri');
+      var result = "<mdRicercaAvanzata>";
+      var search = "";
+
+      for (x=0; x<raFiltri.options.length; x++){
+        result += "<RA_filtri>";
+        result += "<text>"+encodeXml(raFiltri.options[x].text)+"</text>";
+        result += "<value>"+encodeXml(raFiltri.options[x].value)+"</value>";
+        result += "<selected>"+raFiltri.options[x].selected+"</selected>";
+        if (raFiltri.options[x].selected){
+          search += encodeXml(raFiltri.options[x].value)+" ";
+        }
+        result += "</RA_filtri>";
+      }
+      result += "<search>"+search.trim()+"</search>";
+      result += "</mdRicercaAvanzata>";
+      tecaSearchForm.elements["RA_Fields"].value = toHex(result);
+    }
     tecaSearchForm.elements["qStart"].value = qStart;
     if (recPag != undefined){
     	tecaSearchForm.elements["recPag"].value = recPag;
     }
     document.forms.tecaSearchForm.submit();
 }
+
+function toHex(str) {
+    var hex = '';
+    var i = 0;
+    while(str.length > i) {
+        hex += ''+str.charCodeAt(i).toString(16);
+        i++;
+    }
+    return hex;
+} 
+
+var xml_special_to_escaped_one_map = {
+    '&': '&amp;',
+    '"': '&quot;',
+    '<': '&lt;',
+    '>': '&gt;'
+};
+
+var escaped_one_to_xml_special_map = {
+    '&amp;': '&',
+    '&quot;': '"',
+    '&lt;': '<',
+    '&gt;': '>'
+};
+
+function encodeXml(string) {
+    return string.replace(/([\&"<>])/g, function(str, item) {
+        return xml_special_to_escaped_one_map[item];
+    });
+};
+
+function decodeXml(string) {
+    return string.replace(/(&quot;|&lt;|&gt;|&amp;)/g,
+        function(str, item) {
+            return escaped_one_to_xml_special_map[item];
+    });
+}
+
 
 function showSchedaByBid(id){
         var currentLocation = window.location;

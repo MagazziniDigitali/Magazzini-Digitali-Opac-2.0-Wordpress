@@ -37,6 +37,7 @@
                         <xsl:when test="arr[@name='tipoOggetto_show']/str='documento'">
                             <xsl:apply-templates select="arr[@name='autore_show']"/>
                             <xsl:apply-templates select="arr[@name='titolo_show']"/>
+                            <xsl:apply-templates select="arr[@name='data_show']"/>
                             <xsl:apply-templates select="arr[@name='inventario_show']"/>
                             <xsl:apply-templates select="arr[@name='collocazione_show']"/>
                         </xsl:when>
@@ -80,6 +81,13 @@
                 </a>
             </td>
         </tr>
+    </xsl:template>
+    
+    <xsl:template match="arr[@name='data_show']">
+        Data: 
+        <xsl:for-each select="str">
+            <b><xsl:copy-of select="."/></b><br/>
+        </xsl:for-each>
     </xsl:template>
     
     <xsl:template match="arr[@name='agentName_show']">

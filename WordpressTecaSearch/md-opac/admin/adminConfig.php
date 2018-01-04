@@ -75,6 +75,7 @@ class adminConfig {
 				"size_show" => "Dimensione",
 				"autore_show" => "Autore",
 				"titolo_show" => "Titolo",
+				"data_show" => "Data",
 				"inventario_show" => "Inventario",
 				"collocazione_show" => "Collocazione",
 				"eventType_show" => "Event Type",

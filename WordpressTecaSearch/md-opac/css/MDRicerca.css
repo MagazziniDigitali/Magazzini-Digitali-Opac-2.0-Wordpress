@@ -34,12 +34,12 @@ table.mdResultRice td a {
 }
 
 table.mdResultRice tr.pari {
-    background-color: #F5F5F5;
+#    background-color: #F5F5F5;
 }
 
 table.mdResultFacet tr.title td {
 	padding: 10px 10px;
-    background-color: #003F92;
+#    background-color: #003F92;
     border-top: 2px solid #6492CE;
     text-transform: uppercase;
     color: white;
@@ -99,8 +99,8 @@ table#scheda td#value {
 
 
 table#scheda td#testoB {
-    background-color: #e2e2e2;
-    font-size: 12px;
+#    background-color: #e2e2e2;
+#    font-size: 12px;
     font-weight: bold;
     padding: 10px;
     width: 400px;
@@ -109,8 +109,8 @@ table#scheda td#testoB {
 }
 
 table#scheda td#valueB {
-    background-color: #ebebeb;
-    font-size: 12px;
+#    background-color: #ebebeb;
+#    font-size: 12px;
 	color: #5b7d9b;
     padding: 10px;
 	cursor:pointer;
@@ -199,4 +199,18 @@ p.rientro {
     font-size: 12px;
     line-height: 70%;
 	color: #0C9DDE;
+}
+
+div.campiRicerca{
+    float: left;
+    width: 92%;
+}
+
+input.defaultText {
+    margin: 15px 0 0 0;
+    width: 100%;
+}
+
+div.campiBottoni{
+    float: right;
 }

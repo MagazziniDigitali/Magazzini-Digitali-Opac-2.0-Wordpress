@@ -1,0 +1,12 @@
+input, select { vertical-align: middle; }
+select, input, textarea, button { font:99% sans-serif; }
+
+.select,
+.chosen-select,
+.chosen-select-no-single,
+.chosen-select-no-results,
+.chosen-select-deselect,
+.chosen-select-rtl,
+.chosen-select-width {
+  width: 350px;
+}

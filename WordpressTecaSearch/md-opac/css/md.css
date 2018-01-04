@@ -1,5 +1,5 @@
 fieldset.tecaSearchForm {
-    background-color: #efefef;
+#    background-color: #efefef;
     border: 0 none;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -9,13 +9,13 @@ fieldset.tecaSearchForm {
 }
 
 fieldset.tecaSearchForm legend {
-    background-color: #607ab2;
+#    background-color: #607ab2;
     border-top: 2px solid #aec0e4;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    color: #ffffff;
+#    color: #ffffff;
     display: block;
-    font-size: 13px;
+#    font-size: 13px;
     line-height: inherit;
     margin-bottom: 5px;
     padding: 12px;
@@ -30,12 +30,12 @@ fieldset.tecaSearchForm legend {
 
 input.defaultTextActive {
     color: #a1a1a1;
-    font-style: italic;
+ #   font-style: italic;
 }
 
-input.defaultText {
+input.defaultText_old {
     margin: 15px 0 0 15px;
-    width: 300px;
+    width: 450px;
 }
 
 table.mdResultFacet {
@@ -57,14 +57,14 @@ table.tecaSearchNavigator td {
     border-bottom: 1px solid;
     border-left: medium hidden;
     border-right: medium hidden;
-    font-size: x-small;
+ #   font-size: x-small;
 }
 
 table.tecaSearchNavigator td.navigator {
     width: 35px;
 }
 table.tecaSearchNavigator td.lRecPag {
-	width: 100px;
+    width: 130px;
 }
 table.tecaSearchNavigator td.iRecPag {
     width: -moz-min-content;
@@ -72,13 +72,13 @@ table.tecaSearchNavigator td.iRecPag {
 }
 
 table.mdResultFacet {
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-size: 12px;
+#  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+#  font-size: 12px;
 }
 
 table.mdResultRice {
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-size: 12px;
+#  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+#  font-size: 12px;
 }
 
 fieldset.tecaSearchFacet {

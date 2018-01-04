@@ -215,7 +215,7 @@
     <xsl:template match="arr[@name='relationshipType_show']">
         <tr>
             <td id="testoB">
-                Relation Ship Type
+                RelationShip Type
             </td>
             <td id="valueB">
                 <xsl:for-each select="str">

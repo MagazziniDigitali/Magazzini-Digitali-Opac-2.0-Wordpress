@@ -35,7 +35,7 @@ class MDSolrFacetPivot extends MDSolrFacetPivotMD {
 			$titolo = $this->convertTitleFacet ( $value );
 			$contenuto = $this->scanFacetPivotLst ( $facet_fields->offsetGet ( $value ), $facetQuery, $baseurl );
 			if ($contenuto !== '') {
-				$facet .= '<tr class=\'title\'><td>' . $titolo . '</td></tr>' . $contenuto;
+				$facet .= '<tr class=\'title primary-navigation\'><td>' . $titolo . '</td></tr>' . $contenuto;
 			}
 		}
 		return $facet;

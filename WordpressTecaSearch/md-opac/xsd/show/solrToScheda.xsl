@@ -34,7 +34,7 @@
 	    </xsl:if>
 	</table>
         <table id="scheda">
-            <xsl:copy-of select="arr[@name='tipoOggetto_show']/str/child::text()"/><br/>
+            <!-- xsl:copy-of select="arr[@name='tipoOggetto_show']/str/child::text()"/><br/ -->
             <xsl:apply-templates select="arr[@name='originalFileName_show']"/>
 
             <xsl:choose>
@@ -645,7 +645,7 @@
         <xsl:if test="../urlObj">
             <tr>
                 <td colspan="2">
-                    <b>Visualizza Oggetti Digitali</b>
+                    <b>accedi oggetto archiviato</b>
                     <a title="Visualizza Oggetti digitali" id="viewImg">
                         <xsl:attribute name="href"><xsl:copy-of select="../urlObj/child::text()" /></xsl:attribute>
                         <img alt="Visualizza Oggetti Digitali" class="objDigit" src="/wp-content/plugins/md-opac/images/xlimage/images/object.gif"/>
@@ -725,6 +725,12 @@
         <tr>
             <td id="testo">
                 <xsl:choose>
+                    <xsl:when test="../arr[@name='tipoOggetto_show'][1]/str/child::text()='documento'">
+                        oggetto file collegato
+                    </xsl:when>
+                    <xsl:when test="../arr[@name='tipoOggetto_show'][1]/str/child::text()='file'">
+                        oggetto contenitore collegato
+                    </xsl:when>
                     <xsl:when test="../arr[@name='tipologiaFile_show']/str/child::text()">
                         Documento non cartografico di riferimento
                     </xsl:when>

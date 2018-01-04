@@ -13,6 +13,6 @@ function changeTypeAuth(radio) {
 	}
 	document.getElementById("login").setAttribute("class","control-group");
 	document.getElementById("password").setAttribute("class","control-group");
-	document.getElementById("dCaptcha").setAttribute("class","control-group");
+//	document.getElementById("dCaptcha").setAttribute("class","control-group");
 	document.getElementById("button").setAttribute("class","control-group");
 }
