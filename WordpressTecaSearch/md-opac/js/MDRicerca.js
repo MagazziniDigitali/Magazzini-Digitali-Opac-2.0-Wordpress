@@ -54,8 +54,47 @@ function cerca(qStart, recPag){
     }
 
     x = document.getElementById("ricercaAvanzata");
-    if (x.style.display === 'block' &&
-        $('.chosen-select').val() != null) {
+    if ((x.style.display === 'block' &&
+        $('.chosen-select').val() != null) ||
+        (document.getElementById("agentSoftware") != null &&
+          document.getElementById("agentSoftware").checked) ||
+        (document.getElementById("oggettoDiritti") != null &&
+          document.getElementById("oggettoDiritti").checked) ||
+        (document.getElementById("contenitoreAdmtape") != null &&
+          document.getElementById("contenitoreAdmtape").checked) ||
+        (document.getElementById("eventSend") != null &&
+          document.getElementById("eventSend").checked) ||
+        (document.getElementById("eventDecompress") != null &&
+          document.getElementById("eventDecompress").checked) ||
+        (document.getElementById("eventValidation") != null &&
+          document.getElementById("eventValidation").checked) ||
+        (document.getElementById("eventCopyPremis") != null &&
+          document.getElementById("eventCopyPremis").checked) ||
+        (document.getElementById("eventMoveFile") != null &&
+          document.getElementById("eventMoveFile").checked) ||
+        (document.getElementById("eventGeoReplica") != null &&
+          document.getElementById("eventGeoReplica").checked) ||
+        (document.getElementById("eventIndex") != null &&
+          document.getElementById("eventIndex").checked) ||
+        (document.getElementById("fileMd5") != null &&
+          document.getElementById("fileMd5").checked) ||
+        (document.getElementById("fileHtml") != null &&
+          document.getElementById("fileHtml").checked) ||
+        (document.getElementById("fileJp2") != null &&
+          document.getElementById("fileJp2").checked) ||
+        (document.getElementById("fileJpeg") != null &&
+          document.getElementById("fileJpeg").checked) ||
+        (document.getElementById("fileTif") != null &&
+          document.getElementById("fileTif").checked) ||
+        (document.getElementById("filePremis") != null &&
+          document.getElementById("filePremis").checked) ||
+        (document.getElementById("fileJson") != null &&
+          document.getElementById("fileJson").checked) ||
+        (document.getElementById("fileManifest") != null &&
+          document.getElementById("fileManifest").checked) ||
+        (document.getElementById("oggettoRegistro") != null &&
+          document.getElementById("oggettoRegistro").checked)
+        ) {
       var raFiltri = document.getElementById('RA_filtri');
       var result = "<mdRicercaAvanzata>";
       var search = "";
@@ -70,6 +109,85 @@ function cerca(qStart, recPag){
         }
         result += "</RA_filtri>";
       }
+      result += "<RA_esclusioni>";
+      if (document.getElementById("agentSoftware") != null &&
+          document.getElementById("agentSoftware").checked){
+        result += "<agentSoftware>true</agentSoftware>";
+      }
+      if (document.getElementById("oggettoDiritti") != null &&
+          document.getElementById("oggettoDiritti").checked){
+        result += "<oggettoDiritti>true</oggettoDiritti>";
+      }
+      if (document.getElementById("contenitoreAdmtape") != null &&
+          document.getElementById("contenitoreAdmtape").checked){
+        result += "<contenitoreAdmtape>true</contenitoreAdmtape>";
+      }
+      if (document.getElementById("eventSend") != null &&
+          document.getElementById("eventSend").checked){
+        result += "<eventSend>true</eventSend>";
+      }
+      if (document.getElementById("eventDecompress") != null &&
+          document.getElementById("eventDecompress").checked){
+        result += "<eventDecompress>true</eventDecompress>";
+      }
+      if (document.getElementById("eventValidation") != null &&
+          document.getElementById("eventValidation").checked){
+        result += "<eventValidation>true</eventValidation>";
+      }
+      if (document.getElementById("eventCopyPremis") != null &&
+          document.getElementById("eventCopyPremis").checked){
+        result += "<eventCopyPremis>true</eventCopyPremis>";
+      }
+      if (document.getElementById("eventMoveFile") != null &&
+          document.getElementById("eventMoveFile").checked){
+        result += "<eventMoveFile>true</eventMoveFile>";
+      }
+      if (document.getElementById("eventGeoReplica") != null &&
+          document.getElementById("eventGeoReplica").checked){
+        result += "<eventGeoReplica>true</eventGeoReplica>";
+      }
+      if (document.getElementById("eventIndex") != null &&
+          document.getElementById("eventIndex").checked){
+        result += "<eventIndex>true</eventIndex>";
+      }
+      if (document.getElementById("fileMd5") != null &&
+          document.getElementById("fileMd5").checked){
+        result += "<fileMd5>true</fileMd5>";
+      }
+      if (document.getElementById("fileHtml") != null &&
+          document.getElementById("fileHtml").checked){
+        result += "<fileHtml>true</fileHtml>";
+      }
+      if (document.getElementById("fileJp2") != null &&
+          document.getElementById("fileJp2").checked){
+        result += "<fileJp2>true</fileJp2>";
+      }
+      if (document.getElementById("fileJpeg") != null &&
+          document.getElementById("fileJpeg").checked){
+        result += "<fileJpeg>true</fileJpeg>";
+      }
+      if (document.getElementById("fileTif") != null &&
+          document.getElementById("fileTif").checked){
+        result += "<fileTif>true</fileTif>";
+      }
+      if (document.getElementById("filePremis") != null &&
+          document.getElementById("filePremis").checked){
+        result += "<filePremis>true</filePremis>";
+      }
+      if (document.getElementById("fileJson") != null &&
+          document.getElementById("fileJson").checked){
+        result += "<fileJson>true</fileJson>";
+      }
+      if (document.getElementById("fileManifest") != null &&
+          document.getElementById("fileManifest").checked){
+        result += "<fileManifest>true</fileManifest>";
+      }
+      if (document.getElementById("oggettoRegistro") != null &&
+          document.getElementById("oggettoRegistro").checked){
+        result += "<oggettoRegistro>true</oggettoRegistro>";
+      }
+
+      result += "</RA_esclusioni>";
       result += "<search>"+search.trim()+"</search>";
       result += "</mdRicercaAvanzata>";
       tecaSearchForm.elements["RA_Fields"].value = toHex(result);

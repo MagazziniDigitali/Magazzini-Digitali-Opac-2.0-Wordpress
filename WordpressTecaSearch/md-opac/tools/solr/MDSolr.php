@@ -208,6 +208,11 @@ class MDSolr extends MDSolrFacet {
 				$this->facetQueryTitolo .= $this->valueSolr;
 				$this->keySolr = '';
 				$this->valueSolr = '';
+			} else if ($this->keySolr == 'agentDepositante') {
+				$this->facetQuery .= '+agentDepositante:"' . $this->valueSolr . '"';
+				$this->facetQueryTitolo .= $this->valueSolr;
+				$this->keySolr = '';
+				$this->valueSolr = '';
 			}
 		}
 
@@ -291,6 +296,9 @@ class MDSolr extends MDSolrFacet {
 			if ($xml->search != '') {
 				$solrQuery .= ' '.$xml->search;
     			}
+                        $solrQuery = $this->addFilterAdvanzed($solrQuery, $xml);
+                } else {
+                        $solrQuery = $this->addFilterAdvanzed($solrQuery, $xml);
                 }
 
 		$tecaSolrSearchExclude = get_option ( 'tecaSolrSearchExclude' );
@@ -356,10 +364,10 @@ class MDSolr extends MDSolrFacet {
 		$query->addParam ( 'wt', 'xml' );
 
 		try {
-		$query_response = $client->query ( $query );
-		$response = $query_response->getRawResponse ();
-		$this->calcStatoPage($query_response->getResponse ());
-		$this->disFacetMenu ( $query_response->getResponse (), $this->facetQuery, MD_PLUGIN_URL );
+			$query_response = $client->query ( $query );
+			$response = $query_response->getRawResponse ();
+			$this->calcStatoPage($query_response->getResponse ());
+			$this->disFacetMenu ( $query_response->getResponse (), $this->facetQuery, MD_PLUGIN_URL );
 		} catch(Exception $e) {
 			echo 'Caught exception: ',  $e->getMessage(), "\n";
 		}
@@ -369,6 +377,67 @@ class MDSolr extends MDSolrFacet {
 
 		return convertToHtml ( $response, get_option ( 'tecaSolrSearchXsl', 'components/com_tecaricerca/views/search/xsd/solrToSearchResult.xsl' ) );
 	}
+
+	function addFilterAdvanzed($solrQuery, $xml){
+          if (!isset($xml) || !isset($xml->RA_esclusioni->agentSoftware)){
+            $solrQuery .= ' NOT agentType:software';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->contenitoreAdmtape)){
+            $solrQuery .= ' NOT (tipoOggetto:contenitore +tipoContenitore:admtape)';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->eventDecompress)){
+            $solrQuery .= ' NOT eventType:decompress';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->eventSend)){
+            $solrQuery .= ' NOT eventType:send';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->eventValidation)){
+            $solrQuery .= ' NOT eventType:validation';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->eventCopyPremis)){
+            $solrQuery .= ' NOT eventType:copyPremis';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->eventMoveFile)){
+            $solrQuery .= ' NOT eventType:moveFile';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->eventGeoReplica)){
+            $solrQuery .= ' NOT eventType:geoReplica';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->eventIndex)){
+            $solrQuery .= ' NOT eventType:index';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->fileMd5)){
+            $solrQuery .= ' NOT promon:993';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->fileHtml)){
+            $solrQuery .= ' NOT originalFileName:*html NOT originalFileName:*htm';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->fileJp2)){
+            $solrQuery .= ' NOT originalFileName:*jp2';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->fileJpeg)){
+            $solrQuery .= ' NOT mimeType:image/jpeg';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->fileTif)){
+            $solrQuery .= ' NOT mimeType:image/tiff';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->filePremis)){
+            $solrQuery .= ' NOT originalFileName:*premis';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->fileJson)){
+            $solrQuery .= ' NOT mimeType:"application/json"';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->fileManifest)){
+            $solrQuery .= ' NOT originalFileName:"*manifest-sha256.txt" NOT originalFileName:"*tagmanifest-sha256.txt"';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->oggettoRegistro)){
+            $solrQuery .= ' NOT tipoOggetto:registro NOT originalFileName:RegistroIngresso*';
+          }
+          if (!isset($xml) || !isset($xml->RA_esclusioni->oggettoDiritti)){
+            $solrQuery .= ' NOT tipoOggetto:diritti ';
+          }
+          return $solrQuery;
+        }
 
 	/**
 	 *
@@ -438,6 +507,12 @@ class MDSolr extends MDSolrFacet {
 						get_option('tecaSolrSchedaXsl','components/com_tecaricerca/views/show/xsd/solrToScheda.xsl') );
 			} else {
 				#echo ("NON SCHEDAF");
+                                if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('rights_show')[0]){
+					$rights = $this->searchShowRights($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('rights_show')[0]);
+					if ($rights != ""){
+						$response = str_replace('<doc>','<doc><rights>'.$rights.'</rights>',$response);
+					}
+				}
 				if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'file' or
 						$resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'documento' or
 						$resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet('tipoOggetto_show')[0] == 'contenitore'){
@@ -542,6 +617,60 @@ class MDSolr extends MDSolrFacet {
 	 * @param unknown $id
 	 * @return string
 	 */
+	function searchShowRights($id) {
+		$options = array (
+				'hostname' => get_option('tecaSolrServer','default_value'),
+				'port' => get_option('tecaSolrPort','default_value')
+		);
+
+		$client = new SolrClient ( $options );
+		$client->setServlet ( SolrClient::SEARCH_SERVLET_TYPE, get_option('tecaSolrSearchServlet','default_value') );
+
+		$query = new SolrQuery ();
+		if ($id !== ''){
+			$solrQuery='id:'.$id;
+
+			$query->setQuery ( $solrQuery);
+			$query->setStart ( 0 );
+			$query->setRows ( 900 );
+
+			$tecaSolrSearchField = get_option('tecaSolrSchedaFigliField','default_value');
+
+			$query->addField ('rightsBasis_show');
+
+			$query->addSortField ( "titolo_sort", SolrQuery::ORDER_ASC );
+			$query->addSortField ( "originalFileName_sort", SolrQuery::ORDER_ASC );
+			$query->addSortField ( "eventType_sort", SolrQuery::ORDER_ASC );
+
+			$query->addParam ( 'wt', 'xml' );
+
+		#echo("SolrQ: ".$query->toString()."<br/>");
+			$query_response = $client->query ( $query );
+
+			$response = $query_response->getRawResponse ();
+			$resp = $query_response->getResponse ();
+
+
+			if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]==''){
+				return $id;
+			} else {
+				if ($resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet ('rightsBasis_show')[0]==''){
+					return $id;
+				} else {
+					return $resp->offsetGet ( 'response' )->offsetGet ('docs')[0]->offsetGet ('rightsBasis_show')[0];
+				}
+			}
+
+		} else {
+			return "";
+		}
+	}
+
+	/**
+	 *
+	 * @param unknown $id
+	 * @return string
+	 */
 	function searchShowFigliSolr($id) {
 		$options = array (
 				'hostname' => get_option('tecaSolrServer','default_value'),
@@ -555,6 +684,8 @@ class MDSolr extends MDSolrFacet {
 		if ($id !== ''){
 			$solrQuery='_root_:'.$id;
 		}
+
+                $solrQuery = $this->addFilterAdvanzed($solrQuery, $xml);
 
 		$tecaSolrSearchExclude = get_option ( 'tecaSolrSearchExclude' );
                 if (isset($tecaSolrSearchExclude) && $tecaSolrSearchExclude != ''){

@@ -112,6 +112,33 @@
                     <xsl:apply-templates select="arr[@name='descrizione_show']"/>
                     <xsl:apply-templates select="arr[@name='schedaProvenienzaUrl_show']"/>
                 </xsl:when>
+                <xsl:when test="arr[@name='tipoOggetto_show']/str/child::text()='agente' and
+                                arr[@name='agentType_show']/str/child::text()='depositante'">
+                    <xsl:apply-templates select="arr[@name='agentIdentifier_show']"/>
+                    <xsl:apply-templates select="arr[@name='agentName_show']"/>
+                    <xsl:apply-templates select="arr[@name='agentType_show']"/>
+                    <xsl:apply-templates select="arr[@name='agentNote_show']"/>
+                    <xsl:apply-templates select="arr[@name='url_show']"/>
+                </xsl:when>
+                <xsl:when test="arr[@name='tipoOggetto_show']/str/child::text()='diritti'">
+                    <xsl:apply-templates select="arr[@name='rightsIdentifier_show']"/>
+                    <xsl:apply-templates select="arr[@name='rightsBasis_show']"/>
+                    <xsl:apply-templates select="arr[@name='rightsInformationBasis_show']"/>
+                    <xsl:apply-templates select="arr[@name='rightsAct_show']"/>
+                    <xsl:apply-templates select="arr[@name='rightsRestriction_show']"/>
+                    <xsl:apply-templates select="arr[@name='rightsObjectIdentifier_show']"/>
+                    <xsl:apply-templates select="arr[@name='rightsStatuteJurisdiction_show']"/>
+                    <xsl:apply-templates select="arr[@name='rightsStatuteCitation_show']"/>
+                </xsl:when>
+                <xsl:when test="arr[@name='tipoOggetto_show']/str/child::text()='evento' and
+                                arr[@name='eventType_show']/str/child::text()='send'">
+                    <xsl:apply-templates select="arr[@name='eventID_show']"/>
+                    <xsl:apply-templates select="arr[@name='eventType_show']"/>
+                    <xsl:apply-templates select="arr[@name='eventDate_show']"/>
+                    <xsl:apply-templates select="arr[@name='eventOutCome_show']"/>
+                    <xsl:apply-templates select="arr[@name='eventDetail_show']"/>
+                    <xsl:apply-templates select="arr[@name='agentDepositante_show']"/>
+                </xsl:when>
                 <xsl:otherwise>
                     <xsl:apply-templates select="arr[@name='journalTitolo_show']"/>
                     <xsl:apply-templates select="arr[@name='titolo_show']"/>
@@ -404,12 +431,22 @@
     <xsl:template match="arr[@name='url_show']">
         <tr>
             <td id="testoB">
-                Codice URL
+                <xsl:if test="../arr[@name='tipoOggetto_show']/str/child::text()='agente' and
+                                ../arr[@name='agentType_show']/str/child::text()='depositante'">
+                  Agent URL
+                </xsl:if>
+                <xsl:if test="not(../arr[@name='tipoOggetto_show']/str/child::text()='agente' and
+                                ../arr[@name='agentType_show']/str/child::text()='depositante')">
+                  Codice URL
+                </xsl:if>
             </td>
             <td id="valueB">
                 <xsl:for-each select="str">
                     <b>
-                        <xsl:copy-of select="child::text()" />
+                      <a target="_blank">
+                        <xsl:attribute name="href"><xsl:copy-of select="child::text()" /></xsl:attribute>
+                          <xsl:copy-of select="child::text()" />
+                      </a>
                     </b>
                     <br/>
                 </xsl:for-each>
@@ -425,7 +462,10 @@
             <td id="valueB">
                 <xsl:for-each select="str">
                     <b>
+                        <a>
+                            <xsl:attribute name="onclick">findTeca('rights','<xsl:copy-of select="translate(child::text(),$apos,'')" />');</xsl:attribute>
                         <xsl:copy-of select="child::text()" />
+			</a>
                     </b>
                     <br/>
                 </xsl:for-each>
@@ -553,7 +593,17 @@
             <td id="valueB">
                 <xsl:for-each select="str">
                     <b>
-                        <xsl:copy-of select="child::text()" />
+                      <xsl:if test="arr[@name='tipoOggetto_show']/str/child::text()='agente' and
+                                arr[@name='agentType_show']/str/child::text()='depositante'">
+                        <a>
+                            <xsl:attribute name="onclick">findTeca('agentDepositante','<xsl:copy-of select="translate(child::text(),$apos,'')" />');</xsl:attribute>
+                            <xsl:copy-of select="child::text()" />
+			</a>
+                      </xsl:if>
+                      <xsl:if test="not(arr[@name='tipoOggetto_show']/str/child::text()='agente' and
+                                arr[@name='agentType_show']/str/child::text()='depositante')">
+                            <xsl:copy-of select="child::text()" />
+                      </xsl:if>
                     </b>
                     <br/>
                 </xsl:for-each>

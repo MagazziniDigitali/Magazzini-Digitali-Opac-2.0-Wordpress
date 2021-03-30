@@ -181,12 +181,17 @@
             </td>
             <td id="valueB">
                 <xsl:for-each select="str">
-                    <!--a>
-                        <xsl:attribute name="onclick">findTeca('collocazione','<xsl:copy-of select="translate(child::text(),$apos,'')" />');</xsl:attribute -->
+                    <a>
+                        <xsl:attribute name="onclick">showScheda('<xsl:copy-of select="translate(child::text(),$apos,'')" />');</xsl:attribute>
                     <b>
-                        <xsl:copy-of select="child::text()"/>
+			<xsl:if test="../../rights">
+				 <xsl:copy-of select="../../rights/child::text()"/>
+			</xsl:if>
+			<xsl:if test="not(../../rights)">
+                        	<xsl:copy-of select="child::text()"/>
+			</xsl:if>
                     </b>
-                    <!-- /a -->
+                    </a>
                     <br/>
                 </xsl:for-each>
             </td>
@@ -333,12 +338,12 @@
             </td>
             <td id="valueB">
                 <xsl:for-each select="str">
-                    <!--a>
-                        <xsl:attribute name="onclick">findTeca('collocazione','<xsl:copy-of select="translate(child::text(),$apos,'')" />');</xsl:attribute -->
+                    <a>
+                        <xsl:attribute name="onclick">findTeca('id','<xsl:copy-of select="translate(child::text(),$apos,'')" />');</xsl:attribute>
                     <b>
                         <xsl:copy-of select="child::text()"/>
                     </b>
-                    <!-- /a -->
+                    </a>
                     <br/>
                 </xsl:for-each>
             </td>

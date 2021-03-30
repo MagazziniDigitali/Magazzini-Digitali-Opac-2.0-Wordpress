@@ -4,165 +4,192 @@ class WsdlException extends Exception {
 }
 
 function authenticationSoftware(){
-	try {
-		$gsearch = new SoapClient(get_option ( 'mdLoginAuthenticationSoftwareUrl', 'default_value' ));
+  try {
+    $arrContextOptions=array("ssl"=>array( "verify_peer"=>false, "verify_peer_name"=>false,'crypto_method' => STREAM_CRYPTO_METHOD_TLS_CLIENT));
 
-		$params = array(
-				'login' => get_option ( 'mdLoginAuthenticationSoftwareLogin', 'default_value' ),
-				'password' => hash("sha256", get_option ( 'mdLoginAuthenticationSoftwarePassword', 'default_value' )));
-		$result = $gsearch->AuthenticationSoftwareOperation($params);
-	} catch (SoapFault $e) {
-		throw new WsdlException('Riscontrato un errore nella verifica Software ['.$e->getMessage().']');
-	}
-	return $result;
+    $options = array(
+               'soap_version'=>SOAP_1_2,
+               'exceptions'=>true,
+               'trace'=>1,
+               'cache_wsdl'=>WSDL_CACHE_NONE,
+               'stream_context' => stream_context_create($arrContextOptions)
+        );
+    $gsearch = new SoapClient(get_option ( 'mdLoginAuthenticationSoftwareUrl', 'default_value' ), $options);
+
+    $params = array(
+        'login' => get_option ( 'mdLoginAuthenticationSoftwareLogin', 'default_value' ),
+        'password' => hash("sha256", get_option ( 'mdLoginAuthenticationSoftwarePassword', 'default_value' )));
+    $result = $gsearch->AuthenticationSoftwareOperation($params);
+  } catch (SoapFault $e) {
+    throw new WsdlException('Riscontrato un errore nella verifica Software ['.$e->getMessage().']');
+  }
+  return $result;
 }
 
 function checkWsdlObject($objectIdentifierType, $objectIdentifierValue){
-	try{
-		$software = authenticationSoftware();
-		$gsearch = new SoapClient(readParameter($software, 'AuthenticationUserLibraryPort'));
+  try{
+    $software = authenticationSoftware();
+    $arrContextOptions=array("ssl"=>array( "verify_peer"=>false, "verify_peer_name"=>false,'crypto_method' => STREAM_CRYPTO_METHOD_TLS_CLIENT));
 
-		//    var_dump($gsearch->__getFunctions());
-		//   var_dump($gsearch->__getTypes());
-		//   print ("<br/>ESEGUO<br/>");
+    $options = array(
+               'soap_version'=>SOAP_1_2,
+               'exceptions'=>true,
+               'trace'=>1,
+               'cache_wsdl'=>WSDL_CACHE_NONE,
+               'stream_context' => stream_context_create($arrContextOptions)
+        );
+    $gsearch = new SoapClient(readParameter($software, 'AuthenticationUserLibraryPort'), $options);
 
-		// print ("<br/>ESEGUO AAAAAA<br/>");
-		$params = array(
-				'userInput' => array(
-						'objectIdentifier' => array (
-								'objectIdentifierType' => $objectIdentifierType,
-								'objectIdentifierValue' => $objectIdentifierValue),
-						'software' => $software,
-						'ipClient' => getIpClient()
-				));
+    //    var_dump($gsearch->__getFunctions());
+    //   var_dump($gsearch->__getTypes());
+    //   print ("<br/>ESEGUO<br/>");
 
-		$result = $gsearch->AuthenticationUserLibraryOperation($params);
-		// print ("<br/>ESEGUO<br/>");
-		// print ($result);
+    // print ("<br/>ESEGUO AAAAAA<br/>");
+    $params = array(
+        'userInput' => array(
+            'objectIdentifier' => array (
+                'objectIdentifierType' => $objectIdentifierType,
+                'objectIdentifierValue' => $objectIdentifierValue),
+            'software' => $software,
+            'ipClient' => getIpClient()
+        ));
 
-	} catch (SoapFault $e) {
-		throw new WsdlException('Riscontrato un errore nella verifica dell\'oggetto ['.$e->getMessage().']');
-	} catch (WsdlException $e){
-		throw $e;
-	}
-	return $result;
+    $result = $gsearch->AuthenticationUserLibraryOperation($params);
+    // print ("<br/>ESEGUO<br/>");
+    // print ($result);
+
+  } catch (SoapFault $e) {
+    throw new WsdlException('Riscontrato un errore nella verifica dell\'oggetto ['.$e->getMessage().']');
+  } catch (WsdlException $e){
+    throw $e;
+  }
+  return $result;
 }
 
 function confirmWsdlObject($objectIdentifierType, $objectIdentifierValue, $identifier, $actualFileName,
-		$originalFileName, $tipoOggetto, $mimeType, $depositante, $typeAuth, $agentIdentifier, $agentName, $rightsIdentifierType, $rightsIdentifierValue,
-		$rightsDisseminateType, $login, $password){
-			try{
-				$software = authenticationSoftware();
-				$gsearch = new SoapClient(readParameter($software, 'AuthenticationUserLibraryPort'));
+    $originalFileName, $tipoOggetto, $mimeType, $depositante, $typeAuth, $agentIdentifier, $agentName, $rightsIdentifierType, $rightsIdentifierValue,
+    $rightsDisseminateType, $login, $password){
+      try{
+        $software = authenticationSoftware();
+    $arrContextOptions=array("ssl"=>array( "verify_peer"=>false, "verify_peer_name"=>false,'crypto_method' => STREAM_CRYPTO_METHOD_TLS_CLIENT));
 
-				// echo ('typeAuth2222: '.$typeAuth.'<br/>');
-				//    var_dump($gsearch->__getFunctions());
-				//   var_dump($gsearch->__getTypes());
-				//   print ("<br/>ESEGUO<br/>");
+    $options = array(
+               'soap_version'=>SOAP_1_2,
+               'exceptions'=>true,
+               'trace'=>1,
+               'cache_wsdl'=>WSDL_CACHE_NONE,
+               'stream_context' => stream_context_create($arrContextOptions)
+        );
+        $gsearch = new SoapClient(readParameter($software, 'AuthenticationUserLibraryPort'), $options);
 
-				if ($agentIdentifier!= null){
-					$params = array(
-							'userInput' => array(
-									'objectIdentifier' => array (
-											'objectIdentifierType' => $objectIdentifierType,
-											'objectIdentifierValue' => $objectIdentifierValue
-									),
-									'software' => $software,
-									'ipClient' => getIpClient(),
-									'identifier' => $identifier,
-									'actualFileName' => $actualFileName,
-									'originalFileName' => $originalFileName,
-									'agent' => array(
-											'agentIdentifier' => $agentIdentifier,
-											'agentName' => $agentName
-									),
-									'rights' => array(
-											'rightsIdentifier' => array(
-													'rightsIdentifierType' => $rightsIdentifierType,
-													'rightsIdentifierValue' => $rightsIdentifierValue
-											),
-											'rightsDisseminate' => array(
-													'rightsDisseminateType' => $rightsDisseminateType
-											)
-									),
-									'authentication' => array(
-											'login' => $login,
-											'password' => $password
-									),
-									'mimeType' => $mimeType,
-									'tipoOggetto' => $tipoOggetto,
-									'depositante' => $depositante,
-									'typeAuth' => $typeAuth
-							));
-				} else {
-					$params = array(
-							'userInput' => array(
-									'objectIdentifier' => array (
-											'objectIdentifierType' => $objectIdentifierType,
-											'objectIdentifierValue' => $objectIdentifierValue
-									),
-									'software' => $software,
-									'ipClient' => getIpClient(),
-									'identifier' => $identifier,
-									'actualFileName' => $actualFileName,
-									'originalFileName' => $originalFileName,
-									'rights' => array(
-											'rightsIdentifier' => array(
-													'rightsIdentifierType' => $rightsIdentifierType,
-													'rightsIdentifierValue' => $rightsIdentifierValue
-											),
-											'rightsDisseminate' => array(
-													'rightsDisseminateType' => $rightsDisseminateType
-											)
-									),
-									'authentication' => array(
-											'login' => $login,
-											'password' => $password
-									),
+        // echo ('typeAuth2222: '.$typeAuth.'<br/>');
+        //    var_dump($gsearch->__getFunctions());
+        //   var_dump($gsearch->__getTypes());
+        //   print ("<br/>ESEGUO<br/>");
+
+        if ($agentIdentifier!= null){
+          $params = array(
+              'userInput' => array(
+                  'objectIdentifier' => array (
+                      'objectIdentifierType' => $objectIdentifierType,
+                      'objectIdentifierValue' => $objectIdentifierValue
+                  ),
+                  'software' => $software,
+                  'ipClient' => getIpClient(),
+                  'identifier' => $identifier,
+                  'actualFileName' => $actualFileName,
+                  'originalFileName' => $originalFileName,
+                  'agent' => array(
+                      'agentIdentifier' => $agentIdentifier,
+                      'agentName' => $agentName
+                  ),
+                  'rights' => array(
+                      'rightsIdentifier' => array(
+                          'rightsIdentifierType' => $rightsIdentifierType,
+                          'rightsIdentifierValue' => $rightsIdentifierValue
+                      ),
+                      'rightsDisseminate' => array(
+                          'rightsDisseminateType' => $rightsDisseminateType
+                      )
+                  ),
+                  'authentication' => array(
+                      'login' => $login,
+                      'password' => $password
+                  ),
+                  'mimeType' => $mimeType,
+                  'tipoOggetto' => $tipoOggetto,
+                  'depositante' => $depositante,
+                  'typeAuth' => $typeAuth
+              ));
+        } else {
+          $params = array(
+              'userInput' => array(
+                  'objectIdentifier' => array (
+                      'objectIdentifierType' => $objectIdentifierType,
+                      'objectIdentifierValue' => $objectIdentifierValue
+                  ),
+                  'software' => $software,
+                  'ipClient' => getIpClient(),
+                  'identifier' => $identifier,
+                  'actualFileName' => $actualFileName,
+                  'originalFileName' => $originalFileName,
+                  'rights' => array(
+                      'rightsIdentifier' => array(
+                          'rightsIdentifierType' => $rightsIdentifierType,
+                          'rightsIdentifierValue' => $rightsIdentifierValue
+                      ),
+                      'rightsDisseminate' => array(
+                          'rightsDisseminateType' => $rightsDisseminateType
+                      )
+                  ),
+                  'authentication' => array(
+                      'login' => $login,
+                      'password' => $password
+                  ),
                                                                         'mimeType' => $mimeType,
                                                                         'tipoOggetto' => $tipoOggetto,
-									'depositante' => $depositante,
+                  'depositante' => $depositante,
                                                                         'typeAuth' => $typeAuth
-							));
-					}
-				// var_dump($params);
-				$result = $gsearch->AuthenticationUserLibraryOperation($params);
-				// var_dump($result->rights);
+              ));
+          }
+        // var_dump($params);
+        $result = $gsearch->AuthenticationUserLibraryOperation($params);
+        // var_dump($result->rights);
 
-			} catch (SoapFault $e) {
-				throw new WsdlException('Riscontrato un errore nella verifica dell\'oggetto ['.$e->getMessage().']');
-			} catch (WsdlException $e){
-				throw $e;
-			}
-			return $result;
+      } catch (SoapFault $e) {
+        throw new WsdlException('Riscontrato un errore nella verifica dell\'oggetto ['.$e->getMessage().']');
+      } catch (WsdlException $e){
+        throw $e;
+      }
+      return $result;
 }
 
 function readParameter($software, $key){
-	$result='';
+  $result='';
 
-	if (!empty($software->softwareConfig)){
-		if (is_array($software->softwareConfig)){
-			foreach($software->softwareConfig as $key => $value){
-				if ($software->softwareConfig[$key]->nome == $key){
-					$result = $software->softwareConfig[$key]->value;
-				}
-			}
-		} else {
-			if ($software->softwareConfig->nome == $key){
-				$result = $software->softwareConfig->value;
-			}
-		}
-	}
-	return $result;
+  if (!empty($software->softwareConfig)){
+    if (is_array($software->softwareConfig)){
+      foreach($software->softwareConfig as $key => $value){
+        if ($software->softwareConfig[$key]->nome == $key){
+          $result = $software->softwareConfig[$key]->value;
+        }
+      }
+    } else {
+      if ($software->softwareConfig->nome == $key){
+        $result = $software->softwareConfig->value;
+      }
+    }
+  }
+  return $result;
 }
 function getIpClient(){
-	if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-		$ip = $_SERVER['HTTP_CLIENT_IP'];
-	} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	} else {
-		$ip = $_SERVER['REMOTE_ADDR'];
-	}
-	return $ip;
+  if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+    $ip = $_SERVER['HTTP_CLIENT_IP'];
+  } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+  } else {
+    $ip = $_SERVER['REMOTE_ADDR'];
+  }
+  return $ip;
 }
 ?>

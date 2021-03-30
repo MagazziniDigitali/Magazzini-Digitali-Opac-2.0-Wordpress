@@ -138,7 +138,7 @@ function md_Login_form($authenticationUserOutput, $msgError) {
 		</div>
 		<?php
 
-	}
+	} else {
 ?>
 <div class="tecaLoginForm">
   <form action="<?php echo(esc_url ( $_SERVER ['REQUEST_URI'] )); ?>" method="POST" id="tecaLoginForm" name="tecaLoginForm">
@@ -224,5 +224,6 @@ if (get_option ( 'mdLoginAuthenticationRecaptcha', '0' ) == '1'){
   </form>
 </div>
 <?php 
+}
 }
 ?>

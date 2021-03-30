@@ -20,7 +20,7 @@ function change_zeedynamic_footer_menu() {
   //echo '<legend>';
   echo '<a href="http://www.librari.beniculturali.it/opencms/opencms/it/"><img class="urlIstituto" title="mibac" src="'.MD_PLUGIN_URL.'images/logo_dgbid.jpg" alt="mibac" width="170" height="59"></a>';
   echo '&nbsp;';
-  echo '<a href="http://www.bncf.firenze.sbn.it"><img class="urlIstituto" title="bncf" src="http://www.bncf.firenze.sbn.it/img/logo-bncf.jpg" alt="bncf" width="121" height="59"></a>';
+  echo '<a href="http://www.bncf.firenze.sbn.it"><img class="urlIstituto" title="bncf" src="'.MD_PLUGIN_URL.'images/logo-bncf.jpg" alt="bncf" width="121" height="59"></a>';
   echo '&nbsp;';
   echo '<a href="http://www.bncrm.librari.beniculturali.it/"><img class="urlIstituto" title="bncr" src="'.MD_PLUGIN_URL.'images/bncr.jpg" alt="bncr" width="88" height="59"></a>';
   echo '&nbsp;';

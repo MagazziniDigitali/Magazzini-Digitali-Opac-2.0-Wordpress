@@ -20,7 +20,12 @@
                     <xsl:if test="not(arr[@name='titolo_show'])">
                         <xsl:if test="arr[@name='originalFileName_show']">
                             <b>
-                                <xsl:copy-of select="arr[@name='originalFileName_show']"/>  
+                                <xsl:if test="contains(arr[@name='originalFileName_show'], '/Validate/')">
+                                  <xsl:value-of select="substring-after(arr[@name='originalFileName_show'], '/Validate/')"/>
+                                </xsl:if>
+                                <xsl:if test="not(contains(arr[@name='originalFileName_show'], '/Validate/'))">
+                                  <xsl:copy-of select="arr[@name='originalFileName_show']"/>
+                                </xsl:if>
                             </b>
                         </xsl:if>
                         <xsl:if test="not(arr[@name='originalFileName_show'])">

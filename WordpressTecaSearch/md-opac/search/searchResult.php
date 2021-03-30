@@ -41,7 +41,7 @@ function md_Search($mdSolr){
         <input class="defaultText" title="Ricerca per parola:" type="text" name="keyword" id="keyword" value=""/>
         <a onclick="showHidden('ricercaAvanzata');">Ricerca Avanzata</a>
 <?php
-	if (isset($raFields)){
+	if (isset($raFields) && $raFields!=''){
         	echo('<div id="ricercaAvanzata" style="display: block;">');
 	} else {
         	echo('<div id="ricercaAvanzata" style="display: none;">');
@@ -56,21 +56,24 @@ function md_Search($mdSolr){
           <em>Aggiungi campo</em><br/>
           <select id="RA_campoName">
             <option value=""></option>
+            <optgroup label="Scheda Agente">
+              <option value="agentName">Nome Agente</option>
+	    </optgroup>
             <optgroup label="Scheda Contenitore">
-              <option value="ProvenienzaOggetto">Provenienza Oggetto</option>
-              <option value="ObjectIdentifier">Identificatore Oggetto</option>
-              <option value="ActualFileName">Nome File Attuale</option>
-              <option value="Sha1">Codice Sha1</option>
-              <option value="Size">Dimensione in Byte</option>
-              <option value="MimeType">Mime Type</option>
-              <option value="Promon">Codice Promon</option>
-              <option value="OriginaFileName">Nome del File Originale</option>
+              <option value="provenienzaOggetto">Provenienza Oggetto</option>
+              <option value="objectIdentifier">Identificatore Oggetto</option>
+              <option value="actualFileName">Nome File Attuale</option>
+              <option value="sha1">Codice Sha1</option>
+              <option value="size">Dimensione in Byte</option>
+              <option value="mimeType">Mime Type</option>
+              <option value="promon">Codice Promon</option>
+              <option value="originaFileName">Nome del File Originale</option>
             </optgroup>
             <optgroup label="Scheda Evento">
-              <option value="EventID">Identificativo Evento</option>
-              <option value="EventType">Tipo di Evento</option>
-              <option value="EventOutCome">Evento Out Come</option>
-              <option value="AgentDepositante">Codice Agente Destinatario</option>
+              <option value="eventID">Identificativo Evento</option>
+              <option value="eventType">Tipo di Evento</option>
+              <option value="eventOutCome">Evento Out Come</option>
+              <option value="agentDepositante">Codice Agente Destinatario</option>
             </optgroup>
             <optgroup label="Scheda Bibliografica">
               <option value="tipoDocumento">Tipo Documento</option>
@@ -110,7 +113,7 @@ function md_Search($mdSolr){
           depositato da:
           <input type="text" id="RA_depositatoDa" size="10" maxLength="10" pattern="\d{1,2}/\d{1,2}/\d{4}" placeholder="dd/mm/yyyy"> (dd/mm/yyyy)
           a:
-          <input type="text" id="RA_depositatoA" size="10" maxLength="10"> (dd/mm/yyyy)
+          <input type="text" id="RA_depositatoA" size="10" maxLength="10" pattern="\d{1,2}/\d{1,2}/\d{4}" placeholder="dd/mm/yyyy"> (dd/mm/yyyy)
           <input type="button" value="ADD" onclick="addRicercaAvanzata();"/>
           <br/>
           <br>
@@ -131,6 +134,47 @@ function md_Search($mdSolr){
 	}
 ?>
 </select>
+<br/>
+<table width="100%">
+  <tr>
+    <th>Oggetto</th>
+    <th>Agente</th>
+    <th>Contenitore</th>
+    <th>Evento</th>
+    <th>File</th>
+  </tr>
+  <tr>
+    <td>
+<input type="checkbox" id="oggettoRegistro"<?php if(isset($xml->RA_esclusioni->oggettoRegistro)){echo(' checked="checked"');}?>/> Registro<br/>
+<input type="checkbox" id="oggettoDiritti"<?php if(isset($xml->RA_esclusioni->oggettoDiritti)){echo(' checked="checked"');}?>/> Diritti<br/>
+    </td>
+    <td>
+      <input type="checkbox" id="agentSoftware"<?php if(isset($xml->RA_esclusioni->agentSoftware)){echo(' checked="checked"');}?>/> Software
+    </td>
+    <td>
+      <input type="checkbox" id="contenitoreAdmtape"<?php if(isset($xml->RA_esclusioni->contenitoreAdmtape)){echo(' checked="checked"');}?>/> Admtape
+    </td>
+    <td>
+      <input type="checkbox" id="eventSend"<?php if(isset($xml->RA_esclusioni->eventSend)){echo(' checked="checked"');}?>/> Send<br/>
+      <input type="checkbox" id="eventDecompress"<?php if(isset($xml->RA_esclusioni->eventDecompress)){echo(' checked="checked"');}?>/> Decompress<br/>
+<input type="checkbox" id="eventValidation"<?php if(isset($xml->RA_esclusioni->eventValidation)){echo(' checked="checked"');}?>/> Validation<br/>
+<input type="checkbox" id="eventCopyPremis"<?php if(isset($xml->RA_esclusioni->eventCopyPremis)){echo(' checked="checked"');}?>/> CopyPremis<br/>
+<input type="checkbox" id="eventMoveFile"<?php if(isset($xml->RA_esclusioni->eventMoveFile)){echo(' checked="checked"');}?>/> MoveFile<br/>
+<input type="checkbox" id="eventGeoReplica"<?php if(isset($xml->RA_esclusioni->eventGeoReplica)){echo(' checked="checked"');}?>/> GeoReplica<br/>
+<input type="checkbox" id="eventIndex"<?php if(isset($xml->RA_esclusioni->eventIndex)){echo(' checked="checked"');}?>/> Index
+    </td>
+    <td>
+<input type="checkbox" id="fileMd5"<?php if(isset($xml->RA_esclusioni->fileMd5)){echo(' checked="checked"');}?>/> File Md5<br/>
+<input type="checkbox" id="fileHtml"<?php if(isset($xml->RA_esclusioni->fileHtml)){echo(' checked="checked"');}?>/> File Html<br/>
+<input type="checkbox" id="fileJp2"<?php if(isset($xml->RA_esclusioni->fileJp2)){echo(' checked="checked"');}?>/> File Jp2<br/>
+<input type="checkbox" id="fileJpeg"<?php if(isset($xml->RA_esclusioni->fileJpeg)){echo(' checked="checked"');}?>/> File Jpeg<br/>
+<input type="checkbox" id="fileTif"<?php if(isset($xml->RA_esclusioni->fileTif)){echo(' checked="checked"');}?>/> File Tif<br/>
+<input type="checkbox" id="filePremis"<?php if(isset($xml->RA_esclusioni->filePremis)){echo(' checked="checked"');}?>/> File Premis<br/>
+<input type="checkbox" id="fileJson"<?php if(isset($xml->RA_esclusioni->fileJson)){echo(' checked="checked"');}?>/> File Json<br/>
+<input type="checkbox" id="fileManifest"<?php if(isset($xml->RA_esclusioni->fileManifest)){echo(' checked="checked"');}?>/> File Manifest<br/>
+    </td>
+  </tr>
+</table>
 <!--
           <div class="chosen-container chosen-container-multi chosen-container-active" title="" style="width: 100%;">
             <ul class="chosen-choices">
